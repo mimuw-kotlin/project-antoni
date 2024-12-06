@@ -1,13 +1,14 @@
 plugins {
     kotlin("jvm") version "1.8.0"
-    kotlin("plugin.serialization") version "1.8.0" // For Kotlin serialization
-    id("org.jetbrains.compose") version "1.5.0" // Compose plugin
+    kotlin("plugin.serialization") version "1.8.0"
+    id("org.jetbrains.compose") version "1.5.0"
     application
 }
 
 repositories {
     mavenCentral()
-    google() // Wymagane dla Material3 w Compose
+    google()
+    maven("https://maven.pkg.jetbrains.space/public/p/lets-plot/maven")
 }
 
 dependencies {
@@ -16,11 +17,19 @@ dependencies {
     implementation("io.ktor:ktor-client-serialization:2.0.0")
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
-    implementation("org.knowm.xchart:xchart:3.8.1")
 
-    // Compose dependencies for Desktop
-    implementation(compose.desktop.currentOs) // Core library for Compose for Desktop
-    implementation("org.jetbrains.compose.material:material-icons-extended-desktop:1.5.0") // Opcjonalnie ikony Material
+    implementation("org.jetbrains.lets-plot:lets-plot-kotlin-jvm:4.2.0")
+    implementation("org.jetbrains.lets-plot:lets-plot-image-export:4.2.0")
+    implementation("org.jetbrains.lets-plot:lets-plot-kotlin:4.2.0")
+
+    implementation(compose.desktop.currentOs)
+    implementation("org.jetbrains.compose.material:material-icons-extended-desktop:1.5.0")
+
+    implementation("org.jfree:jfreechart:1.5.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+
+    //implementation("org.jetbrains.compose.web:web-widgets:<latest_version>")
+
 }
 
 application {
