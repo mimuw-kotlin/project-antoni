@@ -291,52 +291,64 @@ fun App() {
 
 @Composable
 fun DisplayCompanyDetails(stock: Stock) {
-    Text(
-        "Choose Time Period",
+    Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .padding(16.dp),
-        style = MaterialTheme.typography.h6.copy(
-            textAlign = TextAlign.Center
-        )
-    )
-    val options = listOf("2 years" to 1, "5 years" to 2, "10 years" to 3, "20 years" to 4)
-    var selectedOption by remember { mutableStateOf(4) }
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        horizontalArrangement = Arrangement.SpaceAround
+            .fillMaxSize()
+            .padding(16.dp)
     ) {
-        options.forEach { (label, value) ->
-            Button(
-                onClick = { selectedOption = value },
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = if (selectedOption == value) MaterialTheme.colors.primary else MaterialTheme.colors.surface
-                )
-            ) {
-                Text(label)
-            }
-        }
-    }
+        // Nagłówek wyrównany po lewej stronie
+        Text(
+            "Choose Time Period",
+            modifier = Modifier
+                .wrapContentWidth()
+                .padding(start = 275.dp, bottom = 16.dp), // Odstęp od lewej strony
+            style = MaterialTheme.typography.h6
+        )
 
-    Spacer(modifier = Modifier.height(16.dp))
-    val plotPath = stock.get(selectedOption)
+        // Przyciski w jednym rzędzie obok siebie
+        val options = listOf("2 years" to 1, "5 years" to 2, "10 years" to 3, "20 years" to 4)
+        var selectedOption by remember { mutableStateOf(4) }
 
-    val imageBitmap = remember(plotPath) { loadImageFromFile(plotPath) }
-
-    imageBitmap?.let { bitmap ->
-        Image(
-            bitmap = bitmap,
-            contentDescription = "Loaded Image",
-            contentScale = ContentScale.Fit,
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(600.dp)
+                .padding(start = 120.dp, bottom = 16.dp), // Odstęp całego rzędu od lewej strony
+            horizontalArrangement = Arrangement.Start // Wszystkie przyciski po lewej stronie
+        ) {
+            options.forEach { (label, value) ->
+                Button(
+                    onClick = { selectedOption = value },
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = if (selectedOption == value) MaterialTheme.colors.primary else MaterialTheme.colors.surface
+                    ),
+                    modifier = Modifier.padding(end = 50.dp) // Odstęp między przyciskami w rzędzie
+                ) {
+                    Text(label)
+                }
+            }
+        }
+
+        // Obrazek zajmujący połowę szerokości ekranu
+        val plotPath = stock.get(selectedOption)
+        val imageBitmap = remember(plotPath) { loadImageFromFile(plotPath) }
+
+        imageBitmap?.let { bitmap ->
+            Image(
+                bitmap = bitmap,
+                contentDescription = "Loaded Image",
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .fillMaxWidth(0.4f)
+                    .aspectRatio(1f)   
+                    .padding(start = 16.dp) 
+            )
+        } ?: Text(
+            "Error loading image",
+            color = MaterialTheme.colors.error,
+            modifier = Modifier
+                .padding(start = 16.dp) // Odstęp na wypadek błędu ładowania obrazka
         )
-    } ?: Text("Error loading image", color = MaterialTheme.colors.error)
+    }
 }
 
 fun deletePngFilesInImagesFolder() {
