@@ -19,359 +19,13 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.window.application
 
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowState
 
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 
-import io.ktor.client.*
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
-
-import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.*
-import kotlinx.serialization.json.*
-
-import java.io.File
-import java.io.FileInputStream
-import java.nio.file.Paths
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.time.Duration
-
-import javax.imageio.ImageIO
-import javax.swing.ImageIcon
-import javax.swing.JEditorPane
-import javax.swing.JLabel
-
-import org.jfree.chart.ChartFactory
-import org.jfree.chart.ChartPanel
-import org.jfree.chart.JFreeChart
-import org.jfree.chart.plot.PlotOrientation
-import org.jfree.data.category.DefaultCategoryDataset
-import org.jfree.data.general.DefaultPieDataset
-import org.jfree.chart.ChartUtils
-
-import java.awt.Color
-
-import java.io.FileWriter
-import java.io.FileReader
-import java.io.IOException
-import java.io.BufferedWriter
-import java.io.BufferedReader
-
-fun loadImageFromFile(path: String): ImageBitmap? {
-    return try {
-        val file = File(path)
-        val bufferedImage = ImageIO.read(file)
-        bufferedImage?.let { it.toComposeImageBitmap() }
-    } catch (e: Exception) {
-        e.printStackTrace()
-        null
-    }
-}
-
-val client = HttpClient()
-
-suspend fun fetchStockData(symbol: String, apiKey: String): String {
-    val url = "https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY_ADJUSTED&symbol=$symbol&apikey=$apiKey"
-    return client.get(url).bodyAsText()
-}
-
-@Serializable
-data class MonthlyAdjustedTimeSeriesResponse(
-    @SerialName("Meta Data")
-    val metaData: Map<String, String>,
-    @SerialName("Monthly Adjusted Time Series")
-    val monthlyAdjustedData: Map<String, StockData>
-)
-
-@Serializable
-data class StockData(
-    @SerialName("1. open") val open: String,
-    @SerialName("2. high") val high: String,
-    @SerialName("3. low") val low: String,
-    @SerialName("4. close") val close: String,
-    @SerialName("5. adjusted close") val adjustedClose: String,
-    @SerialName("6. volume") val volume: String,
-    @SerialName("7. dividend amount") val dividendAmount: String
-)
-
-
-class Stock(val symbol: String, val name: String) {
-    var averages: List<Pair<String, Double>> = emptyList()
-    init {
-        runBlocking {
-            // I fetch data from the API at most once every 24 hours.
-            // Then, the program saves the response to the appropriate file.
-            // If the last API fetch occurred less than 24 hours ago,
-            // the program loads the data from the file instead.
-
-            val currentDir = System.getProperty("user.dir")
-            val imagesDir = "$currentDir/images"
-            val now = LocalDateTime.now()
-            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm")
-            val currentTimestamp = now.format(formatter)
-            
-            val regex = Regex("${symbol}_(\\d{4}-\\d{2}-\\d{2})_(\\d{2}-\\d{2})\\.json")
-            
-            //var latestFile: File? = null
-            var latestFilePath: String? = null
-            File(imagesDir).walkTopDown().forEach { file ->
-                if (file.isFile && file.name.matches(regex)) {
-                    val matchResult = regex.find(file.name)
-                    if (matchResult != null) {
-                        val (datePart, timePart) = matchResult.destructured
-                        val fileDateTime = LocalDateTime.parse("$datePart $timePart", DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm"))
-                        
-                        // Checking whether file is older than 24 hours
-                        val duration = Duration.between(fileDateTime, now)
-                        if (duration.toHours() > 24) {
-                            println("Removing file : ${file.name} (older than 24 hours)")
-                            file.delete()
-                        } else {
-                            // Choosing latest file
-                            if (latestFilePath == null || fileDateTime.isAfter(LocalDateTime.parse(latestFilePath!!.substringAfter("${symbol}_").substringBefore(".json"), DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm")))) {
-                                latestFilePath = file.path
-                            }
-                        }
-                    }
-                }
-            }
-            
-            val jsonResponse = latestFilePath?.let { path ->
-                println("Downloading data from file: ${File(path).name}")
-                File(path).readText()
-            } ?: run {
-                println("Pobieranie nowych danych dla symbolu: $symbol")
-                val response = fetchStockData(symbol, "33ZQ4YW7O1VKD01X")
-                val newFileName = "$imagesDir/${symbol}_${currentTimestamp}.json"
-                File(newFileName).apply {
-                    writeText(response)
-                }
-                response
-            }
-
-            //println(name)
-            val json = Json { ignoreUnknownKeys = true }
-            val parsedResponse = json.decodeFromString<MonthlyAdjustedTimeSeriesResponse>(jsonResponse)
-
-            averages = parsedResponse.monthlyAdjustedData.entries
-                .sortedBy { it.key } // Sortowanie rosnące po dacie
-                .map { it.key to it.value.adjustedClose.toDouble() }
-        }
-    }
-
-    // returns current stock value 
-    fun getCurrent(): Double {
-        return averages.lastOrNull()?.second ?: 0.0
-    }
-
-    // return path to plot
-    fun get(option : Int): String {
-        // time period
-        val limit = when (option) {
-            1 -> 24
-            2 -> 60
-            3 -> 120
-            else -> averages.size
-        }
-        val limitedAverages = averages.takeLast(limit)
-
-        val dates = limitedAverages.map { it.first }
-        val prices = limitedAverages.map { it.second }
-
-
-        val dataset = DefaultCategoryDataset()
-        for (i in dates.indices) {
-            dataset.addValue(prices[i], "Price", dates[i])
-        }
-
-        val chart: JFreeChart = ChartFactory.createLineChart(
-            "${name} Stock Price Over Time",
-            "Date",
-            "Price",
-            dataset,
-            PlotOrientation.VERTICAL,
-            true,
-            true,
-            false
-        )
-
-        chart.plot.backgroundPaint = Color.WHITE
-
-        val currentDir = System.getProperty("user.dir")
-        val folderPath = "$currentDir/images"
-
-
-        val filename = "${limit}_${symbol}.png"
-
-        val file = File(folderPath, filename)
-        ImageIO.write(chart.createBufferedImage(800, 600), "PNG", file)
-
-        return file.absolutePath
-    }
-
-}
-
-
-class VirtualPortfolio(val name: String){
-    val stockDataList = mutableListOf<Triple<String, Double, Double>>()
-    val myStocks = mutableMapOf<String, Double>()
-    var invested : Double
-    var currentValue : Double
-
-    init {
-        invested = 0.0
-        currentValue = 0.0
-    }
-
-    // Creating new folder to represent portfolio
-    fun create(){
-        val currentDir = System.getProperty("user.dir")
-        val folderPath = "$currentDir/virtual/$name"
-
-        val directory = File(folderPath)
-        directory.mkdirs()
-        val dataFile = File(directory, "data.csv")
-        try {
-            dataFile.createNewFile()
-            val writer = BufferedWriter(FileWriter(dataFile))
-            writer.write("stock,price_start,owned\n")
-            writer.close()
-        } catch (e: IOException) {
-            println("An error occurred while creating the file: ${e.message}")
-        }
-    }
-
-    // loading information about all the previos sells and buys
-    fun getData() {
-        val currentDir = System.getProperty("user.dir")
-        val folderPath = "$currentDir/virtual/$name"
-        val dataFile = File(folderPath, "data.csv")
-        try {
-            val reader = BufferedReader(FileReader(dataFile))
-            @Suppress("UNUSED_VARIABLE")
-            val header = reader.readLine()
-            var line: String?
-            while (reader.readLine().also { line = it } != null) {
-                val parts = line!!.split(",")
-                if (parts.size == 3) {
-                    val stock = parts[0]
-                    val priceStart = parts[1].toDouble()
-                    val owned = parts[2].toDouble()
-                    stockDataList.add(Triple(stock, priceStart, owned))
-                }
-            }
-            reader.close()
-        } catch (e: IOException) {
-            println("An error occurred while reading the file: ${e.message}")
-        }
-    }
-
-    // calculating value of portfolio
-    fun calculate(stocks: Map<String, Stock>) {
-        invested = 0.0
-        currentValue = 0.0
-
-        stockDataList.forEach { (symbol, priceStart, owned) ->
-            val cur = stocks[symbol]?.getCurrent() ?: 0.0
-            val value = owned * cur / priceStart
-
-            invested += owned
-            if(owned > 0.0) {
-                currentValue += value
-            } else {
-                currentValue += owned
-            }
-            if (symbol !in myStocks) {
-                myStocks[symbol] = 0.0
-            }
-            myStocks[symbol] = myStocks[symbol]?.plus(value) ?: value
-        }
-    }
-
-    // new Buy/Sell operation
-    fun newPos(stocks: Map<String, Stock>, stockName: String, value: Double) {
-        val priceStart = stocks[stockName]?.getCurrent() ?: throw IllegalArgumentException("Stock not found")
-        val currentDir = System.getProperty("user.dir")
-        val folderPath = "$currentDir/virtual/$name"
-        val dataFile = File(folderPath, "data.csv")
-
-        try {
-            val writer = BufferedWriter(FileWriter(dataFile, true)) // 'true' pozwala na dopisywanie do pliku
-            writer.write("$stockName,$priceStart,$value\n")
-            writer.close()
-        } catch (e: IOException) {
-            println("An error occurred while writing to the file: ${e.message}")
-        }
-
-        invested += value
-        if (stockName !in myStocks) {
-            myStocks[stockName] = 0.0
-        }
-        myStocks[stockName] = myStocks[stockName]?.plus(value) ?: value
-        currentValue += value
-    }
-
-    fun getStockValue(stockName: String): Double {
-        if (stockName !in myStocks) {
-            return 0.0
-        }
-        return myStocks[stockName]!!
-    }
-
-    // piechart of all stocks in the portfolio
-    fun createPieChart(): String {
-        val currentDir = System.getProperty("user.dir")
-        val directoryPath = "$currentDir/virtual/$name"
-        val directory = File(directoryPath)
-
-        if (!directory.exists()) {
-            directory.mkdirs()
-        }
-
-        val existingFile = File("$directoryPath/chart.png")
-        if (existingFile.exists()) {
-            existingFile.delete()
-        }
-
-        val dataset: DefaultPieDataset<String> = DefaultPieDataset()
-        for ((key, value) in myStocks) {
-            dataset.setValue(key, value)
-        }
-
-        // Create the pie chart
-        val pieChart = ChartFactory.createPieChart(
-            "$name Portfolio Distribution", // Chart title
-            dataset,                  // Dataset
-            true,                     // Include legend
-            true,                     // Include tooltips
-            false                     // Do not generate URLs
-        )
-
-        val chartPath = "$directoryPath/chart.png"
-        ChartUtils.saveChartAsPNG(File(chartPath), pieChart, 800, 600)
-
-        return chartPath
-    }
-
-}
-
-// return list of all virtual portfolios 
-fun listOfPortfolios(): List<String> {
-    val currentDir = System.getProperty("user.dir")
-    val virtualFolder = File("$currentDir/virtual")
-    if (virtualFolder.exists() && virtualFolder.isDirectory) {
-        return virtualFolder.listFiles()?.filter { it.isDirectory }?.map { it.name } ?: emptyList()
-    }
-    return emptyList()
-}
 
 // Main app function
 @Composable
@@ -460,7 +114,7 @@ fun App() {
                 selectedCompany?.let { company ->
                     Column(
                         modifier = Modifier
-                            .weight(1f) // Druga połowa szerokości
+                            .weight(1f) 
                             .fillMaxHeight()
                     ) {
                         DisplayCompanyDetails(stocks[company]!!)
@@ -547,12 +201,12 @@ fun DisplayVirtual(stocks: Map<String, Stock>){
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start // Przyciski będą obok siebie z lewej strony
+            horizontalArrangement = Arrangement.Start 
         ) {
             Button(onClick = { showBuyDialog = true }) {
                 Text("Buy")
             }
-            Spacer(modifier = Modifier.width(8.dp)) // Mały odstęp między przyciskami
+            Spacer(modifier = Modifier.width(8.dp)) 
             Button(onClick = { showSellDialog = true }) {
                 Text("Sell")
             }
@@ -573,7 +227,7 @@ fun DisplayVirtual(stocks: Map<String, Stock>){
                         TextField(
                             value = amount,
                             onValueChange = { input ->
-                                amount = input.filter { it.isDigit() || it == '.' } // Akceptuje tylko cyfry i kropkę
+                                amount = input.filter { it.isDigit() || it == '.' } 
                             },
                             label = { Text("Amount") }
                         )
@@ -644,7 +298,7 @@ fun DisplayVirtual(stocks: Map<String, Stock>){
                         TextField(
                             value = amount1,
                             onValueChange = { input ->
-                                amount1 = input.filter { it.isDigit() || it == '.' } // Akceptuje tylko cyfry i kropkę
+                                amount1 = input.filter { it.isDigit() || it == '.' } 
                             },
                             label = { Text("Amount") }
                         )
@@ -675,7 +329,6 @@ fun DisplayVirtual(stocks: Map<String, Stock>){
                                 errorMessage2 = ""
                                 var port1 = portfolios[portfolioName]!!
                                 port1.newPos(stocks, stockName, -enteredAmount)
-                                //println("New")
                                 showSellDialog = false
                             }
                         }
@@ -799,7 +452,7 @@ fun DisplayCompanyDetails(stock: Stock) {
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .fillMaxWidth(0.75f) 
-                    .aspectRatio(1f) // Utrzymanie proporcji obrazu
+                    .aspectRatio(1f)
                     .padding(top = 16.dp) 
             )
         } ?: Text(
@@ -810,14 +463,6 @@ fun DisplayCompanyDetails(stock: Stock) {
         )
     }
 }
-
-// before the start of te application, Program deletes all of the previos charts
-fun deletePngFilesInImagesFolder() {
-    val imagesFolder = File(System.getProperty("user.dir"), "images")
-    imagesFolder.listFiles { _, name -> name.endsWith(".png", ignoreCase = true) }
-        ?.forEach { it.delete() }
-}
-
 
 fun main() = application {
     deletePngFilesInImagesFolder()
