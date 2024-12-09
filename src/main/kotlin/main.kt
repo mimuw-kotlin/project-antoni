@@ -19,9 +19,11 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.window.application
 
-// import androidx.compose.ui.text.input.KeyboardOptions
-// import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.WindowState
 
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -34,16 +36,13 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
 
-import org.jetbrains.letsPlot.*
-import org.jetbrains.letsPlot.export.ggsave
-import org.jetbrains.letsPlot.geom.geomLine
-import org.jetbrains.letsPlot.letsPlot
-
 import java.io.File
 import java.io.FileInputStream
 import java.nio.file.Paths
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.time.Duration
 
 import javax.imageio.ImageIO
 import javax.swing.ImageIcon
@@ -111,30 +110,49 @@ class Stock(val symbol: String, val name: String) {
         runBlocking {
             val currentDir = System.getProperty("user.dir")
             val imagesDir = "$currentDir/images"
-
-            val today = LocalDate.now().toString()
-            val yesterday = LocalDate.now().minusDays(1).toString()
-            val regex = Regex("response_${symbol}_(\\d{4}-\\d{2}-\\d{2}).json")
-
-            // && !file.name.contains(yesterday)
-
+            val now = LocalDateTime.now()
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm")
+            val currentTimestamp = now.format(formatter)
+            
+            val regex = Regex("${symbol}_(\\d{4}-\\d{2}-\\d{2})_(\\d{2}-\\d{2})\\.json")
+            
+            //var latestFile: File? = null
+            var latestFilePath: String? = null
             File(imagesDir).walkTopDown().forEach { file ->
-                if (file.isFile && file.name.matches(regex) && !file.name.contains(today)) {
-                    file.delete()
+                if (file.isFile && file.name.matches(regex)) {
+                    val matchResult = regex.find(file.name)
+                    if (matchResult != null) {
+                        val (datePart, timePart) = matchResult.destructured
+                        val fileDateTime = LocalDateTime.parse("$datePart $timePart", DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm"))
+                        
+                        // Sprawdzanie, czy plik jest starszy niż 24 godziny
+                        val duration = Duration.between(fileDateTime, now)
+                        if (duration.toHours() > 24) {
+                            println("Usuwanie pliku: ${file.name} (starszy niż 24 godziny)")
+                            file.delete()
+                        } else {
+                            // Wybieramy najnowszy plik
+                            if (latestFilePath == null || fileDateTime.isAfter(LocalDateTime.parse(latestFilePath!!.substringAfter("${symbol}_").substringBefore(".json"), DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm")))) {
+                                latestFilePath = file.path
+                            }
+                        }
+                    }
                 }
             }
-
-            val fileName = "$imagesDir/response_${symbol}_$today.json"
-            val file = File(fileName)
-
-            val jsonResponse = if (file.exists()) {
-                file.readText()
-                
-            } else {
+            
+            val jsonResponse = latestFilePath?.let { path ->
+                println("Downloading data from file: ${File(path).name}")
+                File(path).readText()
+            } ?: run {
+                println("Pobieranie nowych danych dla symbolu: $symbol")
                 val response = fetchStockData(symbol, "33ZQ4YW7O1VKD01X")
-                file.writeText(response)
+                val newFileName = "$imagesDir/${symbol}_${currentTimestamp}.json"
+                File(newFileName).apply {
+                    writeText(response)
+                }
                 response
             }
+
             //println(name)
             val json = Json { ignoreUnknownKeys = true }
             val parsedResponse = json.decodeFromString<MonthlyAdjustedTimeSeriesResponse>(jsonResponse)
@@ -193,36 +211,6 @@ class Stock(val symbol: String, val name: String) {
         return file.absolutePath
     }
 
-    /*
-    fun getPlot(): String {
-        val dates = averages.map { it.first }
-        val prices = averages.map { it.second }
-
-        val data = mapOf("Date" to dates, "Price" to prices)
-
-        val plot = letsPlot(data) {
-            x = "Date"
-            y = "Price"
-        } + geomLine() + themeMinimal()
-
-        val currentDir = System.getProperty("user.dir")
-        val folderPath = "$currentDir/images" // Path to the folder where you want to save the plot
-
-        // Create the folder if it doesn't exist
-        val directory = File(folderPath)
-        if (!directory.exists()) {
-            directory.mkdirs() // Create the folder if it doesn't exist
-        }
-
-        // Define the file name (with the .html extension)
-        val filename = "stock_plot_$symbol.svg" // Now the file is a PNG file
-
-        ggsave(plot, filename = filename, path = folderPath)
-
-        // Return the full path where the plot is saved
-        return "$folderPath/$filename"
-    }
-    */
 }
 
 
@@ -260,6 +248,7 @@ class VirtualPortfolio(val name: String){
         val dataFile = File(folderPath, "data.csv")
         try {
             val reader = BufferedReader(FileReader(dataFile))
+            @Suppress("UNUSED_VARIABLE")
             val header = reader.readLine()
             var line: String?
             while (reader.readLine().also { line = it } != null) {
@@ -285,9 +274,12 @@ class VirtualPortfolio(val name: String){
             val cur = stocks[symbol]?.getCurrent() ?: 0.0
             val value = owned * cur / priceStart
 
-            invested += priceStart
-            currentValue += value
-
+            invested += owned
+            if(owned > 0.0) {
+                currentValue += value
+            } else {
+                currentValue += owned
+            }
             if (symbol !in myStocks) {
                 myStocks[symbol] = 0.0
             }
@@ -303,7 +295,7 @@ class VirtualPortfolio(val name: String){
 
         try {
             val writer = BufferedWriter(FileWriter(dataFile, true)) // 'true' pozwala na dopisywanie do pliku
-            writer.write("$stockName,$priceStart,$value\n") 
+            writer.write("$stockName,$priceStart,$value\n")
             writer.close()
         } catch (e: IOException) {
             println("An error occurred while writing to the file: ${e.message}")
@@ -345,7 +337,7 @@ class VirtualPortfolio(val name: String){
 
         // Create the pie chart
         val pieChart = ChartFactory.createPieChart(
-            "Portfolio Distribution", // Chart title
+            "$name Portfolio Distribution", // Chart title
             dataset,                  // Dataset
             true,                     // Include legend
             true,                     // Include tooltips
@@ -400,21 +392,7 @@ fun App() {
         "ZOOM" to Stock("ZM", "ZOOM")
     )
 
-    var portfoliosList = listOfPortfolios()
-    var portfoliosList1 by remember { mutableStateOf(portfoliosList.toMutableList())}
-    var portfolios = portfoliosList.associateWith { name -> VirtualPortfolio(name) }
-    for ((_, portfolio) in portfolios) {
-        portfolio.getData()
-        portfolio.calculate(stocks)
-    }
-    var selectedCompany by remember { mutableStateOf<String?>(null) }
-    var showDialog by remember { mutableStateOf(false) }
-    var newPortfolioName by remember { mutableStateOf("") }
-    var showValue by remember { mutableStateOf<String?>(null) }
-    var showBuyDialog by remember { mutableStateOf(false) }
-    var stockName by remember { mutableStateOf("") }
-    var amount by remember { mutableStateOf("") }
-    var errorMessage by remember { mutableStateOf("") }
+    var selectedCompany by remember { mutableStateOf<String?>("APPLE") }
 
     MaterialTheme {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -457,211 +435,331 @@ fun App() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            LazyVerticalGrid(
-                columns = GridCells.Adaptive(minSize = 100.dp),
-                modifier = Modifier.fillMaxWidth(),
-                contentPadding = PaddingValues(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(portfolios.size) { index ->
-                    Button(onClick = { showValue = portfolios.keys.toList()[index] }) {
-                        Text(text = portfolios.keys.toList()[index]) 
-                    }
-                }
-                item {
-                    Button(onClick = { showDialog = true }) {
-                        Text("Add new portfolio")
-                    }
-                }
-            }
-
-            showValue?.let { portfolioName ->
-                var portfolioo = portfolios[portfolioName]!!
-                var portfolio_path = portfolioo.createPieChart()
-                Text(
-                    text = "Portfolio Value: $${String.format("%.2f", portfolioo.currentValue)}",
-                    style = MaterialTheme.typography.body1,
-                    modifier = Modifier.padding(8.dp)
-                )
-
-                //W tym miejscu wyswietl ten wykres
-                val imageBitmap = remember(portfolio_path) { loadImageFromFile(portfolio_path) }
-                imageBitmap?.let { bitmap ->
-                    Image(
-                        bitmap = bitmap,
-                        contentDescription = "Loaded Image",
-                        contentScale = ContentScale.Fit,
-                        modifier = Modifier
-                            .fillMaxWidth(0.3f)
-                            .aspectRatio(1f)   
-                            .padding(start = 16.dp) 
-                    )
-                } ?: Text(
-                    "Error loading image",
-                    color = MaterialTheme.colors.error,
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Column(
                     modifier = Modifier
-                        .padding(start = 16.dp)
-                )
-
-                Button(onClick = { showBuyDialog = true }) {
-                    Text("Buy")
+                        .weight(1f)
+                        .fillMaxHeight()
+                ) {
+                    DisplayVirtual(stocks)
                 }
-                if (showBuyDialog) {
-                    AlertDialog(
-                        onDismissRequest = { showBuyDialog = false },
-                        title = { Text("Buy Stock") },
-                        text = {
-                            Column {
-                                TextField(
-                                    value = stockName,
-                                    onValueChange = { stockName = it },
-                                    label = { Text("Stock Name") }
-                                )
-                                /*
-                                TextField(
-                                    value = amount,
-                                    onValueChange = { amount = it },
-                                    label = { Text("Amount") },
-                                    keyboardOptions = KeyboardOptions.Default.copy(
-                                        keyboardType = KeyboardType.Number
-                                    )
-                                )
-                                */
-                                TextField(
-                                    value = amount,
-                                    onValueChange = { input ->
-                                        amount = input.filter { it.isDigit() || it == '.' } // Akceptuje tylko cyfry i kropkę
-                                    },
-                                    label = { Text("Amount") }
-                                )
-                                if (errorMessage.isNotEmpty()) {
-                                    Text(
-                                        text = errorMessage,
-                                        color = MaterialTheme.colors.error,
-                                        style = MaterialTheme.typography.body2
-                                    )
-                                }
-                            }
-                        },
-                        confirmButton = {
-                            Button(
-                                onClick = {
-                                    val enteredAmount = amount.toDoubleOrNull()
-                                    if (stockName.isBlank() || enteredAmount == null || enteredAmount < 1.0 || enteredAmount > 1_000_000_000.0) {
-                                        errorMessage = when {
-                                            stockName.isBlank() -> "Stock name cannot be empty."
-                                            enteredAmount == null -> "Amount must be a valid number."
-                                            enteredAmount < 1.0 || enteredAmount > 1_000_000_000.0 ->
-                                                "Amount must be between 1.0 and 1,000,000,000.0."
-                                            else -> ""
-                                        }
-                                    } else if (!stocks.containsKey(stockName)) {
-                                        errorMessage = "Stock not found in the list."
-                                    } else {
-                                        errorMessage = ""
-                                        var port = portfolios[portfolioName]!!
-                                        port.newPos(stocks, stockName, enteredAmount)
-                                        showBuyDialog = false
-                                    }
-                                }
-                            ) {
-                                Text("Buy")
-                            }
-                        },
-                        dismissButton = {
-                            Button(onClick = { showBuyDialog = false }) {
-                                Text("Cancel")
-                            }
-                        }
-                    )
-                }
-            }
 
-            var errorMessage1 by remember { mutableStateOf("") }
-
-            // Dialog for Adding New Portfolio
-            if (showDialog) {
-                AlertDialog(
-                    onDismissRequest = { showDialog = false },
-                    title = { Text("Add Portfolio") },
-                    text = {
-                        Column {
-                            Text("Enter new portfolio name:")
-                            Spacer(modifier = Modifier.height(8.dp))
-                            TextField(
-                                value = newPortfolioName,
-                                onValueChange = { newPortfolioName = it },
-                                singleLine = true
-                            )
-                            // Jeśli istnieje komunikat o błędzie, wyświetlamy go
-                            if (errorMessage1.isNotEmpty()) {
-                                Text(
-                                    text = errorMessage1,
-                                    color = MaterialTheme.colors.error,
-                                    style = MaterialTheme.typography.body2
-                                )
-                            }
-                        }
-                    },
-                    confirmButton = {
-                        Button(onClick = {
-                            // Sprawdzamy, czy liczba portfeli nie przekracza 4
-                            if (portfoliosList1.size >= 4) {
-                                errorMessage1 = "You can only add up to 4 portfolios"
-                            } else if (newPortfolioName.isNotBlank()) {
-                                portfolios = portfolios + (newPortfolioName to VirtualPortfolio(newPortfolioName))
-                                portfolios[newPortfolioName]!!.create()
-                                portfoliosList1.add(newPortfolioName)
-                                newPortfolioName = ""
-                                showDialog = false
-                                errorMessage1 = "" // Wyczyść komunikat o błędzie, jeśli dodano portfel
-                            } else {
-                                errorMessage1 = "Portfolio name cannot be empty"
-                            }
-                        }) {
-                            Text("Add")
-                        }
-                    },
-                    dismissButton = {
-                        Button(onClick = { showDialog = false }) {
-                            Text("Cancel")
-                        }
+                selectedCompany?.let { company ->
+                    Column(
+                        modifier = Modifier
+                            .weight(1f) // Druga połowa szerokości
+                            .fillMaxHeight()
+                    ) {
+                        DisplayCompanyDetails(stocks[company]!!)
                     }
-                )
+                }
             }
+
         }
     }
 }
-            //selectedCompany?.let { company ->
-            //    DisplayCompanyDetails(stocks[company]!!)
-            //}
+
+
+@Composable
+fun DisplayVirtual(stocks: Map<String, Stock>){
+    var portfoliosList = listOfPortfolios()
+    var portfoliosList1 by remember { mutableStateOf(portfoliosList.toMutableList())}
+    var portfolios = portfoliosList.associateWith { name -> VirtualPortfolio(name) }
+    for ((_, portfolio) in portfolios) {
+        portfolio.getData()
+        portfolio.calculate(stocks)
+    }
+
+    var showDialog by remember { mutableStateOf(false) }
+    var newPortfolioName by remember { mutableStateOf("") }
+    var showValue by remember { mutableStateOf<String?>(null) }
+    var showBuyDialog by remember { mutableStateOf(false) }
+    var showSellDialog by remember { mutableStateOf(false) }
+    var stockName by remember { mutableStateOf("") }
+    var amount by remember { mutableStateOf("") }
+    var amount1 by remember { mutableStateOf("") }
+    var errorMessage by remember { mutableStateOf("") }
+    var errorMessage2 by remember { mutableStateOf("") }
+
+    LazyVerticalGrid(
+        columns = GridCells.Adaptive(minSize = 100.dp),
+        modifier = Modifier.fillMaxWidth(),
+        contentPadding = PaddingValues(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(portfolios.size) { index ->
+            Button(onClick = { showValue = portfolios.keys.toList()[index] }) {
+                Text(text = portfolios.keys.toList()[index])
+            }
+        }
+        item {
+            Button(onClick = { showDialog = true }) {
+                Text("Add new portfolio")
+            }
+        }
+    }
+
+    showValue?.let { portfolioName ->
+        var portfolioo = portfolios[portfolioName]!!
+        var portfolio_path = portfolioo.createPieChart()
+        //println(portfolio_path)
+        Text(
+            text = "Portfolio Value: $${String.format("%.2f", portfolioo.currentValue)}, Money Invested: \$${
+                String.format(
+                    "%.2f",
+                    portfolioo.invested
+                )
+            }",
+            style = MaterialTheme.typography.body1,
+            modifier = Modifier.padding(8.dp)
+        )
+
+        val imageBitmap = loadImageFromFile(portfolio_path)
+        imageBitmap?.let { bitmap ->
+            Image(
+                bitmap = bitmap,
+                contentDescription = "Loaded Image",
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .fillMaxWidth(0.55f)
+                    .aspectRatio(1f)
+                    .padding(start = 16.dp)
+            )
+        } ?: Text(
+            "Error loading image",
+            color = MaterialTheme.colors.error,
+            modifier = Modifier
+                .padding(start = 16.dp)
+        )
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Start // Przyciski będą obok siebie z lewej strony
+        ) {
+            Button(onClick = { showBuyDialog = true }) {
+                Text("Buy")
+            }
+            Spacer(modifier = Modifier.width(8.dp)) // Mały odstęp między przyciskami
+            Button(onClick = { showSellDialog = true }) {
+                Text("Sell")
+            }
+        }
+
+        if (showBuyDialog) {
+            AlertDialog(
+                onDismissRequest = { showBuyDialog = false },
+                title = { Text("Buy Stock") },
+                text = {
+                    Column {
+                        TextField(
+                            value = stockName,
+                            onValueChange = { stockName = it },
+                            label = { Text("Stock Name") }
+                        )
+
+                        TextField(
+                            value = amount,
+                            onValueChange = { input ->
+                                amount = input.filter { it.isDigit() || it == '.' } // Akceptuje tylko cyfry i kropkę
+                            },
+                            label = { Text("Amount") }
+                        )
+                        if (errorMessage.isNotEmpty()) {
+                            Text(
+                                text = errorMessage,
+                                color = MaterialTheme.colors.error,
+                                style = MaterialTheme.typography.body2
+                            )
+                        }
+                    }
+                },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            val enteredAmount = amount.toDoubleOrNull()
+                            if (stockName.isBlank() || enteredAmount == null || enteredAmount < 1.0 || enteredAmount > 1_000_000_000.0) {
+                                errorMessage = when {
+                                    stockName.isBlank() -> "Stock name cannot be empty."
+                                    enteredAmount == null -> "Amount must be a valid number."
+                                    enteredAmount < 1.0 || enteredAmount > 1_000_000_000.0 ->
+                                        "Amount must be between 1.0 and 1,000,000,000.0."
+                                    else -> ""
+                                }
+                            } else if (!stocks.containsKey(stockName)) {
+                                errorMessage = "Stock not found in the list."
+                            } else {
+                                errorMessage = ""
+                                var port = portfolios[portfolioName]!!
+                                port.newPos(stocks, stockName, enteredAmount)
+                                //println("New")
+                                showBuyDialog = false
+                            }
+                        }
+                    ) {
+                        Text("Buy")
+                    }
+                },
+                dismissButton = {
+                    Button(onClick = { showBuyDialog = false }) {
+                        Text("Cancel")
+                    }
+                }
+            )
+        }
+
+        if (showSellDialog) {
+            AlertDialog(
+                onDismissRequest = { showSellDialog = false },
+                title = { Text("Sell Stock") },
+                text = {
+                    Column {
+                        TextField(
+                            value = stockName,
+                            onValueChange = { stockName = it },
+                            label = { Text("Stock Name") }
+                        )
+                        /*
+                        TextField(
+                            value = amount,
+                            onValueChange = { amount = it },
+                            label = { Text("Amount") },
+                            keyboardOptions = KeyboardOptions.Default.copy(
+                                keyboardType = KeyboardType.Number
+                            )
+                        )
+                        */
+                        TextField(
+                            value = amount1,
+                            onValueChange = { input ->
+                                amount1 = input.filter { it.isDigit() || it == '.' } // Akceptuje tylko cyfry i kropkę
+                            },
+                            label = { Text("Amount") }
+                        )
+                        if (errorMessage2.isNotEmpty()) {
+                            Text(
+                                text = errorMessage2,
+                                color = MaterialTheme.colors.error,
+                                style = MaterialTheme.typography.body2
+                            )
+                        }
+                    }
+                },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            val enteredAmount = amount1.toDoubleOrNull()
+                            if (stockName.isBlank() || enteredAmount == null || enteredAmount < 1.0 || enteredAmount > portfolios[portfolioName]!!.getStockValue(stockName)) {
+                                errorMessage2 = when {
+                                    stockName.isBlank() -> "Stock name cannot be empty."
+                                    enteredAmount == null -> "Amount must be a valid number."
+                                    enteredAmount < 1.0 || enteredAmount > portfolios[portfolioName]!!.getStockValue(stockName) ->
+                                        "Amount must be between 1.0 and ${portfolios[portfolioName]!!.getStockValue(stockName)}"
+                                    else -> ""
+                                }
+                            } else if (!stocks.containsKey(stockName)) {
+                                errorMessage2 = "Stock not found in the list."
+                            } else {
+                                errorMessage2 = ""
+                                var port1 = portfolios[portfolioName]!!
+                                port1.newPos(stocks, stockName, -enteredAmount)
+                                //println("New")
+                                showSellDialog = false
+                            }
+                        }
+                    ) {
+                        Text("Sell")
+                    }
+                },
+                dismissButton = {
+                    Button(onClick = { showSellDialog = false }) {
+                        Text("Cancel")
+                    }
+                }
+            )
+        }
+    }
+
+    var errorMessage1 by remember { mutableStateOf("") }
+
+    // Dialog for Adding New Portfolio
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text("Add Portfolio") },
+            text = {
+                Column {
+                    Text("Enter new portfolio name:")
+                    Spacer(modifier = Modifier.height(8.dp))
+                    TextField(
+                        value = newPortfolioName,
+                        onValueChange = { newPortfolioName = it },
+                        singleLine = true
+                    )
+                    // Jeśli istnieje komunikat o błędzie, wyświetlamy go
+                    if (errorMessage1.isNotEmpty()) {
+                        Text(
+                            text = errorMessage1,
+                            color = MaterialTheme.colors.error,
+                            style = MaterialTheme.typography.body2
+                        )
+                    }
+                }
+            },
+            confirmButton = {
+                Button(onClick = {
+                    // Sprawdzamy, czy liczba portfeli nie przekracza 4
+                    if (portfoliosList1.size >= 4) {
+                        errorMessage1 = "You can only add up to 4 portfolios"
+                    } else if (newPortfolioName.isNotBlank()) {
+                        portfolios = portfolios + (newPortfolioName to VirtualPortfolio(newPortfolioName))
+                        portfolios[newPortfolioName]!!.create()
+                        portfoliosList1.add(newPortfolioName)
+                        newPortfolioName = ""
+                        showDialog = false
+                        errorMessage1 = "" // Wyczyść komunikat o błędzie, jeśli dodano portfel
+                    } else {
+                        errorMessage1 = "Portfolio name cannot be empty"
+                    }
+                }) {
+                    Text("Add")
+                }
+            },
+            dismissButton = {
+                Button(onClick = { showDialog = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
+}
 
 @Composable
 fun DisplayCompanyDetails(stock: Stock) {
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
+            .fillMaxSize() // Kontener zajmuje całą dostępną przestrzeń
+            .padding(16.dp), // Dodanie paddingu
+        horizontalAlignment = Alignment.CenterHorizontally, // Wyśrodkowanie elementów w poziomie
+        verticalArrangement = Arrangement.Center // Wyśrodkowanie elementów w pionie
     ) {
-        // Nagłówek wyrównany po lewej stronie
+        // Nagłówek wyrównany centralnie
         Text(
             "Choose Time Period",
             modifier = Modifier
-                .wrapContentWidth()
-                .padding(start = 275.dp, bottom = 16.dp), // Odstęp od lewej strony
-            style = MaterialTheme.typography.h6
+                .padding(bottom = 16.dp), // Odstęp poniżej nagłówka
+            style = MaterialTheme.typography.h6,
+            textAlign = TextAlign.Center // Wyrównanie tekstu w obrębie Text
         )
 
-        // Przyciski w jednym rzędzie obok siebie
+        // Przyciski w jednym rzędzie, wyśrodkowane
         val options = listOf("2 years" to 1, "5 years" to 2, "10 years" to 3, "20 years" to 4)
         var selectedOption by remember { mutableStateOf(4) }
 
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 120.dp, bottom = 16.dp), // Odstęp całego rzędu od lewej strony
-            horizontalArrangement = Arrangement.Start // Wszystkie przyciski po lewej stronie
+                .fillMaxWidth(), // Rząd zajmuje pełną szerokość
+            horizontalArrangement = Arrangement.Center // Wyśrodkowanie przycisków w rzędzie
         ) {
             options.forEach { (label, value) ->
                 Button(
@@ -669,14 +767,16 @@ fun DisplayCompanyDetails(stock: Stock) {
                     colors = ButtonDefaults.buttonColors(
                         backgroundColor = if (selectedOption == value) MaterialTheme.colors.primary else MaterialTheme.colors.surface
                     ),
-                    modifier = Modifier.padding(end = 50.dp) // Odstęp między przyciskami w rzędzie
+                    modifier = Modifier.padding(end = 8.dp) // Odstęp między przyciskami w rzędzie
                 ) {
                     Text(label)
                 }
             }
         }
 
-        // Obrazek zajmujący połowę szerokości ekranu
+        Spacer(modifier = Modifier.height(16.dp)) // Dystans między przyciskami a obrazkiem
+
+        // Obrazek zajmujący połowę szerokości ekranu, wyśrodkowany
         val plotPath = stock.get(selectedOption)
         val imageBitmap = remember(plotPath) { loadImageFromFile(plotPath) }
 
@@ -686,15 +786,15 @@ fun DisplayCompanyDetails(stock: Stock) {
                 contentDescription = "Loaded Image",
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
-                    .fillMaxWidth(0.4f)
-                    .aspectRatio(1f)   
-                    .padding(start = 16.dp) 
+                    .fillMaxWidth(0.75f) // Obrazek zajmuje 90% szerokości kontenera
+                    .aspectRatio(1f) // Utrzymanie proporcji obrazu
+                    .padding(top = 16.dp) // Dodatkowy odstęp nad obrazkiem
             )
         } ?: Text(
             "Error loading image",
             color = MaterialTheme.colors.error,
-            modifier = Modifier
-                .padding(start = 16.dp) // Odstęp na wypadek błędu ładowania obrazka
+            textAlign = TextAlign.Center, // Wyrównanie tekstu błędu centralnie
+            modifier = Modifier.padding(top = 16.dp) // Odstęp nad tekstem błędu
         )
     }
 }
@@ -704,9 +804,23 @@ fun deletePngFilesInImagesFolder() {
     imagesFolder.listFiles { _, name -> name.endsWith(".png", ignoreCase = true) }
         ?.forEach { it.delete() }
 }
+
+fun main() = application {
+    deletePngFilesInImagesFolder()
+    Window(
+        onCloseRequest = ::exitApplication,
+        title = "Desktop Application",
+        state = WindowState(width = 1280.dp, height = 720.dp)
+    ) {
+        App()
+    }
+}
+
+/*
 fun main() = application {
     deletePngFilesInImagesFolder()
     Window(onCloseRequest = ::exitApplication, title = "Desktop Application") {
         App()
     }
 }
+*/

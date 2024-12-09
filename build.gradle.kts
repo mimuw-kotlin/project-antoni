@@ -18,18 +18,11 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
 
-    implementation("org.jetbrains.lets-plot:lets-plot-kotlin-jvm:4.2.0")
-    implementation("org.jetbrains.lets-plot:lets-plot-image-export:4.2.0")
-    implementation("org.jetbrains.lets-plot:lets-plot-kotlin:4.2.0")
-
     implementation(compose.desktop.currentOs)
     implementation("org.jetbrains.compose.material:material-icons-extended-desktop:1.5.0")
 
     implementation("org.jfree:jfreechart:1.5.3")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-
-    //implementation("org.jetbrains.compose.web:web-widgets:<latest_version>")
-
 }
 
 application {
