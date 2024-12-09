@@ -65,7 +65,6 @@ import java.io.IOException
 import java.io.BufferedWriter
 import java.io.BufferedReader
 
-
 fun loadImageFromFile(path: String): ImageBitmap? {
     return try {
         val file = File(path)
@@ -108,6 +107,11 @@ class Stock(val symbol: String, val name: String) {
     var averages: List<Pair<String, Double>> = emptyList()
     init {
         runBlocking {
+            // I fetch data from the API at most once every 24 hours.
+            // Then, the program saves the response to the appropriate file.
+            // If the last API fetch occurred less than 24 hours ago,
+            // the program loads the data from the file instead.
+
             val currentDir = System.getProperty("user.dir")
             val imagesDir = "$currentDir/images"
             val now = LocalDateTime.now()
@@ -125,13 +129,13 @@ class Stock(val symbol: String, val name: String) {
                         val (datePart, timePart) = matchResult.destructured
                         val fileDateTime = LocalDateTime.parse("$datePart $timePart", DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm"))
                         
-                        // Sprawdzanie, czy plik jest starszy niż 24 godziny
+                        // Checking whether file is older than 24 hours
                         val duration = Duration.between(fileDateTime, now)
                         if (duration.toHours() > 24) {
-                            println("Usuwanie pliku: ${file.name} (starszy niż 24 godziny)")
+                            println("Removing file : ${file.name} (older than 24 hours)")
                             file.delete()
                         } else {
-                            // Wybieramy najnowszy plik
+                            // Choosing latest file
                             if (latestFilePath == null || fileDateTime.isAfter(LocalDateTime.parse(latestFilePath!!.substringAfter("${symbol}_").substringBefore(".json"), DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm")))) {
                                 latestFilePath = file.path
                             }
@@ -163,12 +167,14 @@ class Stock(val symbol: String, val name: String) {
         }
     }
 
+    // returns current stock value 
     fun getCurrent(): Double {
         return averages.lastOrNull()?.second ?: 0.0
     }
 
+    // return path to plot
     fun get(option : Int): String {
-
+        // time period
         val limit = when (option) {
             1 -> 24
             2 -> 60
@@ -225,6 +231,7 @@ class VirtualPortfolio(val name: String){
         currentValue = 0.0
     }
 
+    // Creating new folder to represent portfolio
     fun create(){
         val currentDir = System.getProperty("user.dir")
         val folderPath = "$currentDir/virtual/$name"
@@ -242,6 +249,7 @@ class VirtualPortfolio(val name: String){
         }
     }
 
+    // loading information about all the previos sells and buys
     fun getData() {
         val currentDir = System.getProperty("user.dir")
         val folderPath = "$currentDir/virtual/$name"
@@ -266,6 +274,7 @@ class VirtualPortfolio(val name: String){
         }
     }
 
+    // calculating value of portfolio
     fun calculate(stocks: Map<String, Stock>) {
         invested = 0.0
         currentValue = 0.0
@@ -287,6 +296,7 @@ class VirtualPortfolio(val name: String){
         }
     }
 
+    // new Buy/Sell operation
     fun newPos(stocks: Map<String, Stock>, stockName: String, value: Double) {
         val priceStart = stocks[stockName]?.getCurrent() ?: throw IllegalArgumentException("Stock not found")
         val currentDir = System.getProperty("user.dir")
@@ -316,6 +326,7 @@ class VirtualPortfolio(val name: String){
         return myStocks[stockName]!!
     }
 
+    // piechart of all stocks in the portfolio
     fun createPieChart(): String {
         val currentDir = System.getProperty("user.dir")
         val directoryPath = "$currentDir/virtual/$name"
@@ -352,6 +363,7 @@ class VirtualPortfolio(val name: String){
 
 }
 
+// return list of all virtual portfolios 
 fun listOfPortfolios(): List<String> {
     val currentDir = System.getProperty("user.dir")
     val virtualFolder = File("$currentDir/virtual")
@@ -361,6 +373,7 @@ fun listOfPortfolios(): List<String> {
     return emptyList()
 }
 
+// Main app function
 @Composable
 fun App() {
     val companies = listOf(
@@ -459,7 +472,7 @@ fun App() {
     }
 }
 
-
+// Function to display virtual portfolios
 @Composable
 fun DisplayVirtual(stocks: Map<String, Stock>){
     var portfoliosList = listOfPortfolios()
@@ -503,7 +516,6 @@ fun DisplayVirtual(stocks: Map<String, Stock>){
     showValue?.let { portfolioName ->
         var portfolioo = portfolios[portfolioName]!!
         var portfolio_path = portfolioo.createPieChart()
-        //println(portfolio_path)
         Text(
             text = "Portfolio Value: $${String.format("%.2f", portfolioo.currentValue)}, Money Invested: \$${
                 String.format(
@@ -592,7 +604,6 @@ fun DisplayVirtual(stocks: Map<String, Stock>){
                                 errorMessage = ""
                                 var port = portfolios[portfolioName]!!
                                 port.newPos(stocks, stockName, enteredAmount)
-                                //println("New")
                                 showBuyDialog = false
                             }
                         }
@@ -609,6 +620,7 @@ fun DisplayVirtual(stocks: Map<String, Stock>){
         }
 
         if (showSellDialog) {
+            // User pressed Sell button
             AlertDialog(
                 onDismissRequest = { showSellDialog = false },
                 title = { Text("Sell Stock") },
@@ -696,7 +708,7 @@ fun DisplayVirtual(stocks: Map<String, Stock>){
                         onValueChange = { newPortfolioName = it },
                         singleLine = true
                     )
-                    // Jeśli istnieje komunikat o błędzie, wyświetlamy go
+                    // Showing error message if it exists
                     if (errorMessage1.isNotEmpty()) {
                         Text(
                             text = errorMessage1,
@@ -708,7 +720,7 @@ fun DisplayVirtual(stocks: Map<String, Stock>){
             },
             confirmButton = {
                 Button(onClick = {
-                    // Sprawdzamy, czy liczba portfeli nie przekracza 4
+                    // Check whether there are more than 4 portfolios
                     if (portfoliosList1.size >= 4) {
                         errorMessage1 = "You can only add up to 4 portfolios"
                     } else if (newPortfolioName.isNotBlank()) {
@@ -717,7 +729,7 @@ fun DisplayVirtual(stocks: Map<String, Stock>){
                         portfoliosList1.add(newPortfolioName)
                         newPortfolioName = ""
                         showDialog = false
-                        errorMessage1 = "" // Wyczyść komunikat o błędzie, jeśli dodano portfel
+                        errorMessage1 = "" 
                     } else {
                         errorMessage1 = "Portfolio name cannot be empty"
                     }
@@ -734,32 +746,32 @@ fun DisplayVirtual(stocks: Map<String, Stock>){
     }
 }
 
+// Function to display charts showing the company's price over time
 @Composable
 fun DisplayCompanyDetails(stock: Stock) {
     Column(
         modifier = Modifier
-            .fillMaxSize() // Kontener zajmuje całą dostępną przestrzeń
-            .padding(16.dp), // Dodanie paddingu
-        horizontalAlignment = Alignment.CenterHorizontally, // Wyśrodkowanie elementów w poziomie
-        verticalArrangement = Arrangement.Center // Wyśrodkowanie elementów w pionie
+            .fillMaxSize()
+            .padding(16.dp), 
+        horizontalAlignment = Alignment.CenterHorizontally, 
+        verticalArrangement = Arrangement.Center 
     ) {
-        // Nagłówek wyrównany centralnie
+
         Text(
             "Choose Time Period",
             modifier = Modifier
-                .padding(bottom = 16.dp), // Odstęp poniżej nagłówka
+                .padding(bottom = 16.dp), 
             style = MaterialTheme.typography.h6,
-            textAlign = TextAlign.Center // Wyrównanie tekstu w obrębie Text
+            textAlign = TextAlign.Center 
         )
 
-        // Przyciski w jednym rzędzie, wyśrodkowane
         val options = listOf("2 years" to 1, "5 years" to 2, "10 years" to 3, "20 years" to 4)
         var selectedOption by remember { mutableStateOf(4) }
 
         Row(
             modifier = Modifier
-                .fillMaxWidth(), // Rząd zajmuje pełną szerokość
-            horizontalArrangement = Arrangement.Center // Wyśrodkowanie przycisków w rzędzie
+                .fillMaxWidth(), 
+            horizontalArrangement = Arrangement.Center
         ) {
             options.forEach { (label, value) ->
                 Button(
@@ -767,16 +779,16 @@ fun DisplayCompanyDetails(stock: Stock) {
                     colors = ButtonDefaults.buttonColors(
                         backgroundColor = if (selectedOption == value) MaterialTheme.colors.primary else MaterialTheme.colors.surface
                     ),
-                    modifier = Modifier.padding(end = 8.dp) // Odstęp między przyciskami w rzędzie
+                    modifier = Modifier.padding(end = 8.dp) 
                 ) {
                     Text(label)
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp)) // Dystans między przyciskami a obrazkiem
-
-        // Obrazek zajmujący połowę szerokości ekranu, wyśrodkowany
+        Spacer(modifier = Modifier.height(16.dp)) 
+        
+        // Displaying the image
         val plotPath = stock.get(selectedOption)
         val imageBitmap = remember(plotPath) { loadImageFromFile(plotPath) }
 
@@ -786,24 +798,26 @@ fun DisplayCompanyDetails(stock: Stock) {
                 contentDescription = "Loaded Image",
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
-                    .fillMaxWidth(0.75f) // Obrazek zajmuje 90% szerokości kontenera
+                    .fillMaxWidth(0.75f) 
                     .aspectRatio(1f) // Utrzymanie proporcji obrazu
-                    .padding(top = 16.dp) // Dodatkowy odstęp nad obrazkiem
+                    .padding(top = 16.dp) 
             )
         } ?: Text(
             "Error loading image",
             color = MaterialTheme.colors.error,
-            textAlign = TextAlign.Center, // Wyrównanie tekstu błędu centralnie
-            modifier = Modifier.padding(top = 16.dp) // Odstęp nad tekstem błędu
+            textAlign = TextAlign.Center, 
+            modifier = Modifier.padding(top = 16.dp)
         )
     }
 }
 
+// before the start of te application, Program deletes all of the previos charts
 fun deletePngFilesInImagesFolder() {
     val imagesFolder = File(System.getProperty("user.dir"), "images")
     imagesFolder.listFiles { _, name -> name.endsWith(".png", ignoreCase = true) }
         ?.forEach { it.delete() }
 }
+
 
 fun main() = application {
     deletePngFilesInImagesFolder()
@@ -815,12 +829,3 @@ fun main() = application {
         App()
     }
 }
-
-/*
-fun main() = application {
-    deletePngFilesInImagesFolder()
-    Window(onCloseRequest = ::exitApplication, title = "Desktop Application") {
-        App()
-    }
-}
-*/
