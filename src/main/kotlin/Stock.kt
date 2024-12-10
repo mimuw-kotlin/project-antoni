@@ -69,7 +69,7 @@ class Stock(val symbol: String, val name: String) {
                 println("Downloading data from file: ${File(path).name}")
                 File(path).readText()
             } ?: run {
-                println("Pobieranie nowych danych dla symbolu: $symbol")
+                println("Downloading new data for symbol: $symbol")
                 val response = fetchStockData(symbol, "33ZQ4YW7O1VKD01X")
                 val newFileName = "$imagesDir/${symbol}_${currentTimestamp}.json"
                 File(newFileName).apply {

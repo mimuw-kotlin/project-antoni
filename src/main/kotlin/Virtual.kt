@@ -34,7 +34,7 @@ class VirtualPortfolio(val name: String){
 
         val directory = File(folderPath)
         directory.mkdirs()
-        val dataFile = File(directory, "data.csv")
+        val dataFile = File(directory, "stocks.csv")
         try {
             dataFile.createNewFile()
             val writer = BufferedWriter(FileWriter(dataFile))
@@ -46,6 +46,31 @@ class VirtualPortfolio(val name: String){
     }
 
     // loading information about all the previos sells and buys
+    fun getData() {
+        val currentDir = System.getProperty("user.dir")
+        val folderPath = "$currentDir/virtual/$name"
+        val dataFile = File(folderPath, "stocks.csv")
+        try {
+            val reader = BufferedReader(FileReader(dataFile))
+            @Suppress("UNUSED_VARIABLE")
+            val header = reader.readLine()
+            var line: String?
+            while (reader.readLine().also { line = it } != null) {
+                val parts = line!!.split(",")
+                if (parts.size == 3) {
+                    val stock = parts[0]
+                    val priceStart = parts[1].toDouble()
+                    val owned = parts[2].toDouble()
+                    stockDataList.add(Triple(stock, priceStart, owned))
+                }
+            }
+            reader.close()
+        } catch (e: IOException) {
+            println("An error occurred while reading the file: ${e.message}")
+        }
+    }
+    /*
+    // old functions that I might need in the future
     fun getData() {
         val currentDir = System.getProperty("user.dir")
         val folderPath = "$currentDir/virtual/$name"
@@ -69,26 +94,22 @@ class VirtualPortfolio(val name: String){
             println("An error occurred while reading the file: ${e.message}")
         }
     }
+    */
 
     // calculating value of portfolio
     fun calculate(stocks: Map<String, Stock>) {
         invested = 0.0
         currentValue = 0.0
 
-        stockDataList.forEach { (symbol, priceStart, owned) ->
+        stockDataList.asReversed().forEach { (symbol, priceStart, owned) ->
             val cur = stocks[symbol]?.getCurrent() ?: 0.0
             val value = owned * cur / priceStart
-
-            invested += owned
-            if(owned > 0.0) {
-                currentValue += value
-            } else {
-                currentValue += owned
-            }
             if (symbol !in myStocks) {
-                myStocks[symbol] = 0.0
+                invested += owned
+                currentValue += value
+                myStocks[symbol] = value
             }
-            myStocks[symbol] = myStocks[symbol]?.plus(value) ?: value
+            //myStocks[symbol] = myStocks[symbol]?.plus(value) ?: value
         }
     }
 
@@ -97,15 +118,7 @@ class VirtualPortfolio(val name: String){
         val priceStart = stocks[stockName]?.getCurrent() ?: throw IllegalArgumentException("Stock not found")
         val currentDir = System.getProperty("user.dir")
         val folderPath = "$currentDir/virtual/$name"
-        val dataFile = File(folderPath, "data.csv")
-
-        try {
-            val writer = BufferedWriter(FileWriter(dataFile, true))
-            writer.write("$stockName,$priceStart,$value\n")
-            writer.close()
-        } catch (e: IOException) {
-            println("An error occurred while writing to the file: ${e.message}")
-        }
+        val dataFile = File(folderPath, "stocks.csv")
 
         invested += value
         if (stockName !in myStocks) {
@@ -113,6 +126,14 @@ class VirtualPortfolio(val name: String){
         }
         myStocks[stockName] = myStocks[stockName]?.plus(value) ?: value
         currentValue += value
+        try {
+            val writer = BufferedWriter(FileWriter(dataFile, true))
+            writer.write("$stockName,$priceStart,${myStocks[stockName]}\n")
+            writer.close()
+        } catch (e: IOException) {
+            println("An error occurred while writing to the file: ${e.message}")
+        }
+
     }
 
     fun getStockValue(stockName: String): Double {
