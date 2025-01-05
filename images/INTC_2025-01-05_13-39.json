@@ -2,17 +2,26 @@
     "Meta Data": {
         "1. Information": "Monthly Adjusted Prices and Volumes",
         "2. Symbol": "INTC",
-        "3. Last Refreshed": "2024-12-09",
+        "3. Last Refreshed": "2025-01-03",
         "4. Time Zone": "US/Eastern"
     },
     "Monthly Adjusted Time Series": {
-        "2024-12-09": {
+        "2025-01-03": {
+            "1. open": "20.2300",
+            "2. high": "20.6650",
+            "3. low": "20.0000",
+            "4. close": "20.5600",
+            "5. adjusted close": "20.5600",
+            "6. volume": "95422471",
+            "7. dividend amount": "0.0000"
+        },
+        "2024-12-31": {
             "1. open": "24.8400",
             "2. high": "25.4800",
-            "3. low": "20.6600",
-            "4. close": "20.8100",
-            "5. adjusted close": "20.8100",
-            "6. volume": "708658185",
+            "3. low": "18.9000",
+            "4. close": "20.0500",
+            "5. adjusted close": "20.0500",
+            "6. volume": "1681422601",
             "7. dividend amount": "0.0000"
         },
         "2024-11-29": {

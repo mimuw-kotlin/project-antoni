@@ -2,17 +2,26 @@
     "Meta Data": {
         "1. Information": "Monthly Adjusted Prices and Volumes",
         "2. Symbol": "NVDA",
-        "3. Last Refreshed": "2024-12-09",
+        "3. Last Refreshed": "2025-01-03",
         "4. Time Zone": "US/Eastern"
     },
     "Monthly Adjusted Time Series": {
-        "2024-12-09": {
+        "2025-01-03": {
+            "1. open": "136.0000",
+            "2. high": "144.9000",
+            "3. low": "134.6300",
+            "4. close": "144.4700",
+            "5. adjusted close": "144.4700",
+            "6. volume": "427569644",
+            "7. dividend amount": "0.0000"
+        },
+        "2024-12-31": {
             "1. open": "138.8300",
             "2. high": "146.5400",
-            "3. low": "137.1300",
-            "4. close": "138.8100",
-            "5. adjusted close": "138.8100",
-            "6. volume": "1117756415",
+            "3. low": "126.8600",
+            "4. close": "134.2900",
+            "5. adjusted close": "134.2900",
+            "6. volume": "4086168557",
             "7. dividend amount": "0.0100"
         },
         "2024-11-29": {

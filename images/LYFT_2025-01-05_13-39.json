@@ -2,17 +2,26 @@
     "Meta Data": {
         "1. Information": "Monthly Adjusted Prices and Volumes",
         "2. Symbol": "LYFT",
-        "3. Last Refreshed": "2024-12-09",
+        "3. Last Refreshed": "2025-01-03",
         "4. Time Zone": "US/Eastern"
     },
     "Monthly Adjusted Time Series": {
-        "2024-12-09": {
+        "2025-01-03": {
+            "1. open": "13.0800",
+            "2. high": "14.5400",
+            "3. low": "12.9600",
+            "4. close": "14.2700",
+            "5. adjusted close": "14.2700",
+            "6. volume": "42414627",
+            "7. dividend amount": "0.0000"
+        },
+        "2024-12-31": {
             "1. open": "17.2600",
             "2. high": "17.6250",
-            "3. low": "15.3910",
-            "4. close": "16.3000",
-            "5. adjusted close": "16.3000",
-            "6. volume": "78961960",
+            "3. low": "12.7621",
+            "4. close": "12.9000",
+            "5. adjusted close": "12.9000",
+            "6. volume": "281484585",
             "7. dividend amount": "0.0000"
         },
         "2024-11-29": {

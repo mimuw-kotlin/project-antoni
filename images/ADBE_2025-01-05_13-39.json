@@ -2,17 +2,26 @@
     "Meta Data": {
         "1. Information": "Monthly Adjusted Prices and Volumes",
         "2. Symbol": "ADBE",
-        "3. Last Refreshed": "2024-12-09",
+        "3. Last Refreshed": "2025-01-03",
         "4. Time Zone": "US/Eastern"
     },
     "Monthly Adjusted Time Series": {
-        "2024-12-09": {
+        "2025-01-03": {
+            "1. open": "447.7600",
+            "2. high": "450.1200",
+            "3. low": "425.3200",
+            "4. close": "430.5700",
+            "5. adjusted close": "430.5700",
+            "6. volume": "8127259",
+            "7. dividend amount": "0.0000"
+        },
+        "2024-12-31": {
             "1. open": "512.8500",
             "2. high": "557.8999",
-            "3. low": "504.5050",
-            "4. close": "547.9300",
-            "5. adjusted close": "547.9300",
-            "6. volume": "16615344",
+            "3. low": "432.4700",
+            "4. close": "444.6800",
+            "5. adjusted close": "444.6800",
+            "6. volume": "105647315",
             "7. dividend amount": "0.0000"
         },
         "2024-11-29": {

@@ -2,17 +2,26 @@
     "Meta Data": {
         "1. Information": "Monthly Adjusted Prices and Volumes",
         "2. Symbol": "TSLA",
-        "3. Last Refreshed": "2024-12-09",
+        "3. Last Refreshed": "2025-01-03",
         "4. Time Zone": "US/Eastern"
     },
     "Monthly Adjusted Time Series": {
-        "2024-12-09": {
+        "2025-01-03": {
+            "1. open": "390.1000",
+            "2. high": "411.8799",
+            "3. low": "373.0400",
+            "4. close": "410.4400",
+            "5. adjusted close": "410.4400",
+            "6. volume": "205134078",
+            "7. dividend amount": "0.0000"
+        },
+        "2024-12-31": {
             "1. open": "352.3800",
-            "2. high": "404.8000",
+            "2. high": "488.5399",
             "3. low": "348.2000",
-            "4. close": "389.7900",
-            "5. adjusted close": "389.7900",
-            "6. volume": "446283124",
+            "4. close": "403.8400",
+            "5. adjusted close": "403.8400",
+            "6. volume": "1903650512",
             "7. dividend amount": "0.0000"
         },
         "2024-11-29": {

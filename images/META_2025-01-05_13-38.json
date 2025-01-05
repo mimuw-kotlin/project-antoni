@@ -2,25 +2,34 @@
     "Meta Data": {
         "1. Information": "Monthly Adjusted Prices and Volumes",
         "2. Symbol": "META",
-        "3. Last Refreshed": "2024-12-09",
+        "3. Last Refreshed": "2025-01-03",
         "4. Time Zone": "US/Eastern"
     },
     "Monthly Adjusted Time Series": {
-        "2024-12-09": {
-            "1. open": "577.5000",
-            "2. high": "629.7899",
-            "3. low": "575.5700",
-            "4. close": "613.5700",
-            "5. adjusted close": "613.5700",
-            "6. volume": "78569271",
+        "2025-01-03": {
+            "1. open": "589.7200",
+            "2. high": "609.5000",
+            "3. low": "587.8200",
+            "4. close": "604.6300",
+            "5. adjusted close": "604.6300",
+            "6. volume": "24119053",
             "7. dividend amount": "0.0000"
+        },
+        "2024-12-31": {
+            "1. open": "577.5000",
+            "2. high": "638.4000",
+            "3. low": "575.5700",
+            "4. close": "585.5100",
+            "5. adjusted close": "585.5100",
+            "6. volume": "263232496",
+            "7. dividend amount": "0.5000"
         },
         "2024-11-29": {
             "1. open": "567.6050",
             "2. high": "599.6600",
             "3. low": "549.0500",
             "4. close": "574.3200",
-            "5. adjusted close": "574.3200",
+            "5. adjusted close": "573.8604",
             "6. volume": "237811395",
             "7. dividend amount": "0.0000"
         },
@@ -29,7 +38,7 @@
             "2. high": "602.9500",
             "3. low": "561.5200",
             "4. close": "567.5800",
-            "5. adjusted close": "567.5800",
+            "5. adjusted close": "567.1257",
             "6. volume": "265908326",
             "7. dividend amount": "0.0000"
         },
@@ -38,7 +47,7 @@
             "2. high": "577.4000",
             "3. low": "495.6000",
             "4. close": "572.4400",
-            "5. adjusted close": "572.4400",
+            "5. adjusted close": "571.9819",
             "6. volume": "246373276",
             "7. dividend amount": "0.5000"
         },
@@ -47,7 +56,7 @@
             "2. high": "544.2300",
             "3. low": "450.8000",
             "4. close": "521.3100",
-            "5. adjusted close": "520.8217",
+            "5. adjusted close": "520.4049",
             "6. volume": "323379343",
             "7. dividend amount": "0.0000"
         },
@@ -56,7 +65,7 @@
             "2. high": "542.8100",
             "3. low": "442.6500",
             "4. close": "474.8300",
-            "5. adjusted close": "474.3852",
+            "5. adjusted close": "474.0056",
             "6. volume": "324021236",
             "7. dividend amount": "0.0000"
         },
@@ -65,7 +74,7 @@
             "2. high": "522.8799",
             "3. low": "468.2400",
             "4. close": "504.2200",
-            "5. adjusted close": "503.7477",
+            "5. adjusted close": "503.3445",
             "6. volume": "226951165",
             "7. dividend amount": "0.5000"
         },
@@ -74,7 +83,7 @@
             "2. high": "482.4999",
             "3. low": "427.1100",
             "4. close": "466.8300",
-            "5. adjusted close": "465.9306",
+            "5. adjusted close": "465.5577",
             "6. volume": "282486703",
             "7. dividend amount": "0.0000"
         },
@@ -83,7 +92,7 @@
             "2. high": "531.4899",
             "3. low": "414.5000",
             "4. close": "430.1700",
-            "5. adjusted close": "429.3413",
+            "5. adjusted close": "428.9976",
             "6. volume": "436147995",
             "7. dividend amount": "0.0000"
         },
@@ -92,7 +101,7 @@
             "2. high": "523.5700",
             "3. low": "476.0000",
             "4. close": "485.5800",
-            "5. adjusted close": "484.6445",
+            "5. adjusted close": "484.2566",
             "6. volume": "278473986",
             "7. dividend amount": "0.0000"
         },
@@ -101,7 +110,7 @@
             "2. high": "494.3599",
             "3. low": "393.0500",
             "4. close": "490.1300",
-            "5. adjusted close": "489.1857",
+            "5. adjusted close": "488.7942",
             "6. volume": "466261632",
             "7. dividend amount": "0.5000"
         },
@@ -110,7 +119,7 @@
             "2. high": "406.3600",
             "3. low": "340.0100",
             "4. close": "390.1400",
-            "5. adjusted close": "388.9728",
+            "5. adjusted close": "388.6615",
             "6. volume": "347229642",
             "7. dividend amount": "0.0000"
         },
@@ -119,7 +128,7 @@
             "2. high": "361.9000",
             "3. low": "313.6600",
             "4. close": "353.9600",
-            "5. adjusted close": "352.9011",
+            "5. adjusted close": "352.6186",
             "6. volume": "334028198",
             "7. dividend amount": "0.0000"
         },
@@ -128,7 +137,7 @@
             "2. high": "342.9200",
             "3. low": "301.8500",
             "4. close": "327.1500",
-            "5. adjusted close": "326.1713",
+            "5. adjusted close": "325.9102",
             "6. volume": "329354280",
             "7. dividend amount": "0.0000"
         },
@@ -137,7 +146,7 @@
             "2. high": "330.5400",
             "3. low": "279.4030",
             "4. close": "301.2700",
-            "5. adjusted close": "300.3687",
+            "5. adjusted close": "300.1283",
             "6. volume": "511372074",
             "7. dividend amount": "0.0000"
         },
@@ -146,7 +155,7 @@
             "2. high": "312.8700",
             "3. low": "286.7900",
             "4. close": "300.2100",
-            "5. adjusted close": "299.3119",
+            "5. adjusted close": "299.0723",
             "6. volume": "406801410",
             "7. dividend amount": "0.0000"
         },
@@ -155,7 +164,7 @@
             "2. high": "324.1400",
             "3. low": "274.3800",
             "4. close": "295.8900",
-            "5. adjusted close": "295.0048",
+            "5. adjusted close": "294.7687",
             "6. volume": "424632813",
             "7. dividend amount": "0.0000"
         },
@@ -164,7 +173,7 @@
             "2. high": "326.2000",
             "3. low": "284.8499",
             "4. close": "318.6000",
-            "5. adjusted close": "317.6469",
+            "5. adjusted close": "317.3926",
             "6. volume": "625339455",
             "7. dividend amount": "0.0000"
         },
@@ -173,7 +182,7 @@
             "2. high": "289.7900",
             "3. low": "258.8800",
             "4. close": "286.9800",
-            "5. adjusted close": "286.1215",
+            "5. adjusted close": "285.8925",
             "6. volume": "481179600",
             "7. dividend amount": "0.0000"
         },
@@ -182,7 +191,7 @@
             "2. high": "268.6500",
             "3. low": "229.8500",
             "4. close": "264.7200",
-            "5. adjusted close": "263.9280",
+            "5. adjusted close": "263.7168",
             "6. volume": "487059059",
             "7. dividend amount": "0.0000"
         },
@@ -191,7 +200,7 @@
             "2. high": "241.6850",
             "3. low": "207.1300",
             "4. close": "240.3200",
-            "5. adjusted close": "239.6010",
+            "5. adjusted close": "239.4093",
             "6. volume": "439810216",
             "7. dividend amount": "0.0000"
         },
@@ -200,7 +209,7 @@
             "2. high": "212.1700",
             "3. low": "171.4300",
             "4. close": "211.9400",
-            "5. adjusted close": "211.3059",
+            "5. adjusted close": "211.1368",
             "6. volume": "690450690",
             "7. dividend amount": "0.0000"
         },
@@ -209,7 +218,7 @@
             "2. high": "197.1600",
             "3. low": "147.0600",
             "4. close": "174.9400",
-            "5. adjusted close": "174.4166",
+            "5. adjusted close": "174.2770",
             "6. volume": "772199855",
             "7. dividend amount": "0.0000"
         },
@@ -218,7 +227,7 @@
             "2. high": "153.1900",
             "3. low": "122.2800",
             "4. close": "148.9700",
-            "5. adjusted close": "148.5243",
+            "5. adjusted close": "148.4055",
             "6. volume": "548770812",
             "7. dividend amount": "0.0000"
         },
@@ -227,7 +236,7 @@
             "2. high": "124.6700",
             "3. low": "112.4600",
             "4. close": "120.3400",
-            "5. adjusted close": "119.9800",
+            "5. adjusted close": "119.8840",
             "6. volume": "653019661",
             "7. dividend amount": "0.0000"
         },
@@ -236,7 +245,7 @@
             "2. high": "118.7400",
             "3. low": "88.0900",
             "4. close": "118.1000",
-            "5. adjusted close": "117.7467",
+            "5. adjusted close": "117.6524",
             "6. volume": "1063814422",
             "7. dividend amount": "0.0000"
         },
@@ -245,7 +254,7 @@
             "2. high": "142.3901",
             "3. low": "92.6000",
             "4. close": "93.1600",
-            "5. adjusted close": "92.8813",
+            "5. adjusted close": "92.8070",
             "6. volume": "1114165581",
             "7. dividend amount": "0.0000"
         },
@@ -254,7 +263,7 @@
             "2. high": "171.3900",
             "3. low": "134.1201",
             "4. close": "135.6800",
-            "5. adjusted close": "135.2741",
+            "5. adjusted close": "135.1658",
             "6. volume": "634744508",
             "7. dividend amount": "0.0000"
         },
@@ -263,7 +272,7 @@
             "2. high": "183.1000",
             "3. low": "155.2301",
             "4. close": "162.9300",
-            "5. adjusted close": "162.4426",
+            "5. adjusted close": "162.3126",
             "6. volume": "551637733",
             "7. dividend amount": "0.0000"
         },
@@ -272,7 +281,7 @@
             "2. high": "183.8500",
             "3. low": "154.8500",
             "4. close": "159.1000",
-            "5. adjusted close": "158.6240",
+            "5. adjusted close": "158.4971",
             "6. volume": "586548218",
             "7. dividend amount": "0.0000"
         },
@@ -281,7 +290,7 @@
             "2. high": "202.0300",
             "3. low": "154.2500",
             "4. close": "161.2500",
-            "5. adjusted close": "160.7676",
+            "5. adjusted close": "160.6389",
             "6. volume": "686376324",
             "7. dividend amount": "0.0000"
         },
@@ -290,7 +299,7 @@
             "2. high": "224.3000",
             "3. low": "176.1100",
             "4. close": "193.6400",
-            "5. adjusted close": "193.0607",
+            "5. adjusted close": "192.9062",
             "6. volume": "680370106",
             "7. dividend amount": "0.0000"
         },
@@ -299,7 +308,7 @@
             "2. high": "236.8600",
             "3. low": "169.0000",
             "4. close": "200.4700",
-            "5. adjusted close": "199.8703",
+            "5. adjusted close": "199.7103",
             "6. volume": "671047219",
             "7. dividend amount": "0.0000"
         },
@@ -308,7 +317,7 @@
             "2. high": "231.1510",
             "3. low": "185.8200",
             "4. close": "222.3600",
-            "5. adjusted close": "221.6948",
+            "5. adjusted close": "221.5173",
             "6. volume": "730939429",
             "7. dividend amount": "0.0000"
         },
@@ -317,7 +326,7 @@
             "2. high": "328.0000",
             "3. low": "190.2200",
             "4. close": "211.0300",
-            "5. adjusted close": "210.3987",
+            "5. adjusted close": "210.2303",
             "6. volume": "1127891130",
             "7. dividend amount": "0.0000"
         },
@@ -326,7 +335,7 @@
             "2. high": "343.0854",
             "3. low": "289.0100",
             "4. close": "313.2600",
-            "5. adjusted close": "312.3228",
+            "5. adjusted close": "312.0729",
             "6. volume": "426742200",
             "7. dividend amount": "0.0000"
         },
@@ -335,7 +344,7 @@
             "2. high": "352.7100",
             "3. low": "299.5000",
             "4. close": "336.3500",
-            "5. adjusted close": "335.3438",
+            "5. adjusted close": "335.0754",
             "6. volume": "437947523",
             "7. dividend amount": "0.0000"
         },
@@ -344,7 +353,7 @@
             "2. high": "353.8300",
             "3. low": "323.2000",
             "4. close": "324.4600",
-            "5. adjusted close": "323.4893",
+            "5. adjusted close": "323.2304",
             "6. volume": "440274313",
             "7. dividend amount": "0.0000"
         },
@@ -353,7 +362,7 @@
             "2. high": "345.0200",
             "3. low": "308.1100",
             "4. close": "323.5700",
-            "5. adjusted close": "322.6020",
+            "5. adjusted close": "322.3438",
             "6. volume": "588382461",
             "7. dividend amount": "0.0000"
         },
@@ -362,7 +371,7 @@
             "2. high": "384.3300",
             "3. low": "338.1500",
             "4. close": "339.3900",
-            "5. adjusted close": "338.3747",
+            "5. adjusted close": "338.1038",
             "6. volume": "338133948",
             "7. dividend amount": "0.0000"
         },
@@ -371,7 +380,7 @@
             "2. high": "382.7590",
             "3. low": "347.7000",
             "4. close": "379.3800",
-            "5. adjusted close": "378.2450",
+            "5. adjusted close": "377.9423",
             "6. volume": "226135690",
             "7. dividend amount": "0.0000"
         },
@@ -380,7 +389,7 @@
             "2. high": "377.5499",
             "3. low": "334.5000",
             "4. close": "356.3000",
-            "5. adjusted close": "355.2341",
+            "5. adjusted close": "354.9498",
             "6. volume": "334221334",
             "7. dividend amount": "0.0000"
         },
@@ -389,7 +398,7 @@
             "2. high": "358.1400",
             "3. low": "323.4800",
             "4. close": "347.7100",
-            "5. adjusted close": "346.6698",
+            "5. adjusted close": "346.3923",
             "6. volume": "344609593",
             "7. dividend amount": "0.0000"
         },
@@ -398,7 +407,7 @@
             "2. high": "333.7800",
             "3. low": "298.1900",
             "4. close": "328.7300",
-            "5. adjusted close": "327.7465",
+            "5. adjusted close": "327.4842",
             "6. volume": "353419284",
             "7. dividend amount": "0.0000"
         },
@@ -407,7 +416,7 @@
             "2. high": "331.8100",
             "3. low": "296.0400",
             "4. close": "325.0800",
-            "5. adjusted close": "324.1075",
+            "5. adjusted close": "323.8481",
             "6. volume": "421280404",
             "7. dividend amount": "0.0000"
         },
@@ -416,7 +425,7 @@
             "2. high": "299.7050",
             "3. low": "253.5000",
             "4. close": "294.5300",
-            "5. adjusted close": "293.6489",
+            "5. adjusted close": "293.4138",
             "6. volume": "497455263",
             "7. dividend amount": "0.0000"
         },
@@ -425,7 +434,7 @@
             "2. high": "276.6000",
             "3. low": "254.0400",
             "4. close": "257.6200",
-            "5. adjusted close": "256.8493",
+            "5. adjusted close": "256.6437",
             "6. volume": "315517591",
             "7. dividend amount": "0.0000"
         },
@@ -434,7 +443,7 @@
             "2. high": "286.7900",
             "3. low": "244.6100",
             "4. close": "258.3300",
-            "5. adjusted close": "257.5572",
+            "5. adjusted close": "257.3510",
             "6. volume": "452021869",
             "7. dividend amount": "0.0000"
         },
@@ -443,7 +452,7 @@
             "2. high": "291.7800",
             "3. low": "264.6300",
             "4. close": "273.1600",
-            "5. adjusted close": "272.3428",
+            "5. adjusted close": "272.1248",
             "6. volume": "363610072",
             "7. dividend amount": "0.0000"
         },
@@ -452,7 +461,7 @@
             "2. high": "297.3800",
             "3. low": "257.3400",
             "4. close": "276.9700",
-            "5. adjusted close": "276.1414",
+            "5. adjusted close": "275.9204",
             "6. volume": "356724889",
             "7. dividend amount": "0.0000"
         },
@@ -461,7 +470,7 @@
             "2. high": "285.2400",
             "3. low": "254.8200",
             "4. close": "263.1100",
-            "5. adjusted close": "262.3229",
+            "5. adjusted close": "262.1129",
             "6. volume": "454176190",
             "7. dividend amount": "0.0000"
         },
@@ -470,7 +479,7 @@
             "2. high": "303.6000",
             "3. low": "244.1300",
             "4. close": "261.9000",
-            "5. adjusted close": "261.1165",
+            "5. adjusted close": "260.9075",
             "6. volume": "499179596",
             "7. dividend amount": "0.0000"
         },
@@ -479,7 +488,7 @@
             "2. high": "304.6700",
             "3. low": "247.4300",
             "4. close": "293.2000",
-            "5. adjusted close": "292.3228",
+            "5. adjusted close": "292.0889",
             "6. volume": "574266263",
             "7. dividend amount": "0.0000"
         },
@@ -488,7 +497,7 @@
             "2. high": "255.8500",
             "3. low": "226.9000",
             "4. close": "253.6700",
-            "5. adjusted close": "252.9111",
+            "5. adjusted close": "252.7087",
             "6. volume": "516844579",
             "7. dividend amount": "0.0000"
         },
@@ -497,7 +506,7 @@
             "2. high": "245.1900",
             "3. low": "207.1100",
             "4. close": "227.0700",
-            "5. adjusted close": "226.3907",
+            "5. adjusted close": "226.2095",
             "6. volume": "548043739",
             "7. dividend amount": "0.0000"
         },
@@ -506,7 +515,7 @@
             "2. high": "240.9000",
             "3. low": "198.7600",
             "4. close": "225.0900",
-            "5. adjusted close": "224.4166",
+            "5. adjusted close": "224.2370",
             "6. volume": "509432028",
             "7. dividend amount": "0.0000"
         },
@@ -515,7 +524,7 @@
             "2. high": "209.6900",
             "3. low": "150.8300",
             "4. close": "204.7100",
-            "5. adjusted close": "204.0976",
+            "5. adjusted close": "203.9342",
             "6. volume": "541538950",
             "7. dividend amount": "0.0000"
         },
@@ -524,7 +533,7 @@
             "2. high": "197.2400",
             "3. low": "137.1000",
             "4. close": "166.8000",
-            "5. adjusted close": "166.3010",
+            "5. adjusted close": "166.1679",
             "6. volume": "649513169",
             "7. dividend amount": "0.0000"
         },
@@ -533,7 +542,7 @@
             "2. high": "218.7700",
             "3. low": "181.8200",
             "4. close": "192.4700",
-            "5. adjusted close": "191.8942",
+            "5. adjusted close": "191.7406",
             "6. volume": "317634511",
             "7. dividend amount": "0.0000"
         },
@@ -542,7 +551,7 @@
             "2. high": "224.2000",
             "3. low": "201.0600",
             "4. close": "201.9100",
-            "5. adjusted close": "201.3060",
+            "5. adjusted close": "201.1448",
             "6. volume": "347787838",
             "7. dividend amount": "0.0000"
         },
@@ -551,7 +560,7 @@
             "2. high": "208.9300",
             "3. low": "193.1700",
             "4. close": "205.2500",
-            "5. adjusted close": "204.6360",
+            "5. adjusted close": "204.4722",
             "6. volume": "278225688",
             "7. dividend amount": "0.0000"
         },
@@ -560,7 +569,7 @@
             "2. high": "203.8000",
             "3. low": "188.5400",
             "4. close": "201.6400",
-            "5. adjusted close": "201.0368",
+            "5. adjusted close": "200.8759",
             "6. volume": "258577372",
             "7. dividend amount": "0.0000"
         },
@@ -569,7 +578,7 @@
             "2. high": "198.0900",
             "3. low": "173.0900",
             "4. close": "191.6500",
-            "5. adjusted close": "191.0766",
+            "5. adjusted close": "190.9237",
             "6. volume": "329115789",
             "7. dividend amount": "0.0000"
         },
@@ -578,7 +587,7 @@
             "2. high": "193.1000",
             "3. low": "175.6600",
             "4. close": "178.0800",
-            "5. adjusted close": "177.5472",
+            "5. adjusted close": "177.4051",
             "6. volume": "267509200",
             "7. dividend amount": "0.0000"
         },
@@ -587,7 +596,7 @@
             "2. high": "198.4700",
             "3. low": "176.6600",
             "4. close": "185.6700",
-            "5. adjusted close": "185.1145",
+            "5. adjusted close": "184.9664",
             "6. volume": "295147285",
             "7. dividend amount": "0.0000"
         },
@@ -596,7 +605,7 @@
             "2. high": "208.6600",
             "3. low": "191.9300",
             "4. close": "194.2300",
-            "5. adjusted close": "193.6489",
+            "5. adjusted close": "193.4939",
             "6. volume": "351062381",
             "7. dividend amount": "0.0000"
         },
@@ -605,7 +614,7 @@
             "2. high": "198.8800",
             "3. low": "160.8400",
             "4. close": "193.0000",
-            "5. adjusted close": "192.4226",
+            "5. adjusted close": "192.2686",
             "6. volume": "426428460",
             "7. dividend amount": "0.0000"
         },
@@ -614,7 +623,7 @@
             "2. high": "196.1800",
             "3. low": "177.1600",
             "4. close": "177.4700",
-            "5. adjusted close": "176.9391",
+            "5. adjusted close": "176.7975",
             "6. volume": "286821828",
             "7. dividend amount": "0.0000"
         },
@@ -623,7 +632,7 @@
             "2. high": "198.4800",
             "3. low": "167.2800",
             "4. close": "193.4000",
-            "5. adjusted close": "192.8214",
+            "5. adjusted close": "192.6671",
             "6. volume": "382184268",
             "7. dividend amount": "0.0000"
         },
@@ -632,7 +641,7 @@
             "2. high": "174.3000",
             "3. low": "159.2800",
             "4. close": "166.6900",
-            "5. adjusted close": "166.1913",
+            "5. adjusted close": "166.0583",
             "6. volume": "388172717",
             "7. dividend amount": "0.0000"
         },
@@ -641,7 +650,7 @@
             "2. high": "172.4700",
             "3. low": "159.5900",
             "4. close": "161.4500",
-            "5. adjusted close": "160.9670",
+            "5. adjusted close": "160.8382",
             "6. volume": "302243555",
             "7. dividend amount": "0.0000"
         },
@@ -650,7 +659,7 @@
             "2. high": "171.6800",
             "3. low": "128.5600",
             "4. close": "166.6900",
-            "5. adjusted close": "166.1913",
+            "5. adjusted close": "166.0583",
             "6. volume": "527561443",
             "7. dividend amount": "0.0000"
         },
@@ -659,7 +668,7 @@
             "2. high": "147.1900",
             "3. low": "123.0200",
             "4. close": "131.0900",
-            "5. adjusted close": "130.6978",
+            "5. adjusted close": "130.5932",
             "6. volume": "558786249",
             "7. dividend amount": "0.0000"
         },
@@ -668,7 +677,7 @@
             "2. high": "154.1300",
             "3. low": "126.8500",
             "4. close": "140.6100",
-            "5. adjusted close": "140.1893",
+            "5. adjusted close": "140.0771",
             "6. volume": "518150415",
             "7. dividend amount": "0.0000"
         },
@@ -677,7 +686,7 @@
             "2. high": "165.8800",
             "3. low": "139.0300",
             "4. close": "151.7900",
-            "5. adjusted close": "151.3359",
+            "5. adjusted close": "151.2148",
             "6. volume": "622446235",
             "7. dividend amount": "0.0000"
         },
@@ -686,7 +695,7 @@
             "2. high": "173.8900",
             "3. low": "158.8700",
             "4. close": "164.4600",
-            "5. adjusted close": "163.9680",
+            "5. adjusted close": "163.8368",
             "6. volume": "500468912",
             "7. dividend amount": "0.0000"
         },
@@ -695,7 +704,7 @@
             "2. high": "188.3000",
             "3. low": "170.2700",
             "4. close": "175.7300",
-            "5. adjusted close": "175.2043",
+            "5. adjusted close": "175.0641",
             "6. volume": "549016789",
             "7. dividend amount": "0.0000"
         },
@@ -704,7 +713,7 @@
             "2. high": "218.6200",
             "3. low": "166.5600",
             "4. close": "172.5800",
-            "5. adjusted close": "172.0637",
+            "5. adjusted close": "171.9260",
             "6. volume": "652763259",
             "7. dividend amount": "0.0000"
         },
@@ -713,7 +722,7 @@
             "2. high": "203.5500",
             "3. low": "186.4300",
             "4. close": "194.3200",
-            "5. adjusted close": "193.7387",
+            "5. adjusted close": "193.5836",
             "6. volume": "387265765",
             "7. dividend amount": "0.0000"
         },
@@ -722,7 +731,7 @@
             "2. high": "192.7200",
             "3. low": "170.2300",
             "4. close": "191.7800",
-            "5. adjusted close": "191.2063",
+            "5. adjusted close": "191.0532",
             "6. volume": "401144183",
             "7. dividend amount": "0.0000"
         },
@@ -731,7 +740,7 @@
             "2. high": "177.1000",
             "3. low": "150.5100",
             "4. close": "172.0000",
-            "5. adjusted close": "171.4854",
+            "5. adjusted close": "171.3482",
             "6. volume": "751130388",
             "7. dividend amount": "0.0000"
         },
@@ -740,7 +749,7 @@
             "2. high": "186.1000",
             "3. low": "149.0200",
             "4. close": "159.7900",
-            "5. adjusted close": "159.3120",
+            "5. adjusted close": "159.1845",
             "6. volume": "983045332",
             "7. dividend amount": "0.0000"
         },
@@ -749,7 +758,7 @@
             "2. high": "195.3200",
             "3. low": "167.1800",
             "4. close": "178.3200",
-            "5. adjusted close": "177.7865",
+            "5. adjusted close": "177.6442",
             "6. volume": "497869797",
             "7. dividend amount": "0.0000"
         },
@@ -758,7 +767,7 @@
             "2. high": "190.6600",
             "3. low": "175.8000",
             "4. close": "186.8900",
-            "5. adjusted close": "186.3309",
+            "5. adjusted close": "186.1818",
             "6. volume": "464919779",
             "7. dividend amount": "0.0000"
         },
@@ -767,7 +776,7 @@
             "2. high": "182.2800",
             "3. low": "169.0100",
             "4. close": "176.4600",
-            "5. adjusted close": "175.9321",
+            "5. adjusted close": "175.7913",
             "6. volume": "308647940",
             "7. dividend amount": "0.0000"
         },
@@ -776,7 +785,7 @@
             "2. high": "184.2500",
             "3. low": "174.0000",
             "4. close": "177.1800",
-            "5. adjusted close": "176.6499",
+            "5. adjusted close": "176.5086",
             "6. volume": "335716436",
             "7. dividend amount": "0.0000"
         },
@@ -785,7 +794,7 @@
             "2. high": "180.8000",
             "3. low": "168.2900",
             "4. close": "180.0600",
-            "5. adjusted close": "179.5213",
+            "5. adjusted close": "179.3776",
             "6. volume": "309836859",
             "7. dividend amount": "0.0000"
         },
@@ -794,7 +803,7 @@
             "2. high": "174.0000",
             "3. low": "161.5600",
             "4. close": "170.8700",
-            "5. adjusted close": "170.3588",
+            "5. adjusted close": "170.2225",
             "6. volume": "300559928",
             "7. dividend amount": "0.0000"
         },
@@ -803,7 +812,7 @@
             "2. high": "173.0500",
             "3. low": "165.0000",
             "4. close": "171.9700",
-            "5. adjusted close": "171.4555",
+            "5. adjusted close": "171.3183",
             "6. volume": "297781301",
             "7. dividend amount": "0.0000"
         },
@@ -812,7 +821,7 @@
             "2. high": "175.4900",
             "3. low": "147.8000",
             "4. close": "169.2500",
-            "5. adjusted close": "168.7437",
+            "5. adjusted close": "168.6086",
             "6. volume": "402911091",
             "7. dividend amount": "0.0000"
         },
@@ -821,7 +830,7 @@
             "2. high": "156.5000",
             "3. low": "144.5600",
             "4. close": "150.9800",
-            "5. adjusted close": "150.5283",
+            "5. adjusted close": "150.4078",
             "6. volume": "405705533",
             "7. dividend amount": "0.0000"
         },
@@ -830,7 +839,7 @@
             "2. high": "153.6000",
             "3. low": "144.4216",
             "4. close": "151.4600",
-            "5. adjusted close": "151.0069",
+            "5. adjusted close": "150.8860",
             "6. volume": "390036541",
             "7. dividend amount": "0.0000"
         },
@@ -839,7 +848,7 @@
             "2. high": "151.5300",
             "3. low": "138.8100",
             "4. close": "150.2500",
-            "5. adjusted close": "149.8005",
+            "5. adjusted close": "149.6806",
             "6. volume": "273330661",
             "7. dividend amount": "0.0000"
         },
@@ -848,7 +857,7 @@
             "2. high": "142.9500",
             "3. low": "136.0800",
             "4. close": "142.0500",
-            "5. adjusted close": "141.6250",
+            "5. adjusted close": "141.5117",
             "6. volume": "342098632",
             "7. dividend amount": "0.0000"
         },
@@ -857,7 +866,7 @@
             "2. high": "137.1846",
             "3. low": "130.3000",
             "4. close": "135.5400",
-            "5. adjusted close": "135.1345",
+            "5. adjusted close": "135.0264",
             "6. volume": "384700625",
             "7. dividend amount": "0.0000"
         },
@@ -866,7 +875,7 @@
             "2. high": "133.1400",
             "3. low": "115.5100",
             "4. close": "130.3200",
-            "5. adjusted close": "129.9301",
+            "5. adjusted close": "129.8261",
             "6. volume": "379004804",
             "7. dividend amount": "0.0000"
         },
@@ -875,7 +884,7 @@
             "2. high": "122.5000",
             "3. low": "114.0000",
             "4. close": "115.0500",
-            "5. adjusted close": "114.7058",
+            "5. adjusted close": "114.6140",
             "6. volume": "408728358",
             "7. dividend amount": "0.0000"
         },
@@ -884,7 +893,7 @@
             "2. high": "131.9400",
             "3. low": "113.5535",
             "4. close": "118.4200",
-            "5. adjusted close": "118.0657",
+            "5. adjusted close": "117.9712",
             "6. volume": "654602125",
             "7. dividend amount": "0.0000"
         },
@@ -893,7 +902,7 @@
             "2. high": "133.5000",
             "3. low": "126.7500",
             "4. close": "130.9900",
-            "5. adjusted close": "130.5981",
+            "5. adjusted close": "130.4936",
             "6. volume": "313284563",
             "7. dividend amount": "0.0000"
         },
@@ -902,7 +911,7 @@
             "2. high": "131.9800",
             "3. low": "125.6000",
             "4. close": "128.2700",
-            "5. adjusted close": "127.8863",
+            "5. adjusted close": "127.7839",
             "6. volume": "376582063",
             "7. dividend amount": "0.0000"
         },
@@ -911,7 +920,7 @@
             "2. high": "126.7300",
             "3. low": "122.0700",
             "4. close": "126.1200",
-            "5. adjusted close": "125.7427",
+            "5. adjusted close": "125.6421",
             "6. volume": "365670913",
             "7. dividend amount": "0.0000"
         },
@@ -920,7 +929,7 @@
             "2. high": "128.3300",
             "3. low": "112.9700",
             "4. close": "123.9400",
-            "5. adjusted close": "123.5692",
+            "5. adjusted close": "123.4703",
             "6. volume": "470108473",
             "7. dividend amount": "0.0000"
         },
@@ -929,7 +938,7 @@
             "2. high": "135.6000",
             "3. low": "108.2300",
             "4. close": "114.2800",
-            "5. adjusted close": "113.9381",
+            "5. adjusted close": "113.8469",
             "6. volume": "451155442",
             "7. dividend amount": "0.0000"
         },
@@ -938,7 +947,7 @@
             "2. high": "121.0800",
             "3. low": "114.8000",
             "4. close": "118.8100",
-            "5. adjusted close": "118.4546",
+            "5. adjusted close": "118.3598",
             "6. volume": "460559986",
             "7. dividend amount": "0.0000"
         },
@@ -947,7 +956,7 @@
             "2. high": "120.7900",
             "3. low": "106.3100",
             "4. close": "117.5800",
-            "5. adjusted close": "117.2282",
+            "5. adjusted close": "117.1344",
             "6. volume": "741613866",
             "7. dividend amount": "0.0000"
         },
@@ -956,7 +965,7 @@
             "2. high": "116.9900",
             "3. low": "104.4000",
             "4. close": "114.1000",
-            "5. adjusted close": "113.7587",
+            "5. adjusted close": "113.6676",
             "6. volume": "521143963",
             "7. dividend amount": "0.0000"
         },
@@ -965,7 +974,7 @@
             "2. high": "117.5900",
             "3. low": "96.8200",
             "4. close": "106.9200",
-            "5. adjusted close": "106.6001",
+            "5. adjusted close": "106.5148",
             "6. volume": "874152635",
             "7. dividend amount": "0.0000"
         },
@@ -974,7 +983,7 @@
             "2. high": "112.8400",
             "3. low": "89.3700",
             "4. close": "112.2100",
-            "5. adjusted close": "111.8743",
+            "5. adjusted close": "111.7848",
             "6. volume": "792709100",
             "7. dividend amount": "0.0000"
         },
@@ -983,7 +992,7 @@
             "2. high": "107.9200",
             "3. low": "101.4600",
             "4. close": "104.6600",
-            "5. adjusted close": "104.3469",
+            "5. adjusted close": "104.2634",
             "6. volume": "440479804",
             "7. dividend amount": "0.0000"
         },
@@ -992,7 +1001,7 @@
             "2. high": "110.6500",
             "3. low": "100.4700",
             "4. close": "104.2400",
-            "5. adjusted close": "103.9281",
+            "5. adjusted close": "103.8450",
             "6. volume": "547199822",
             "7. dividend amount": "0.0000"
         },
@@ -1001,7 +1010,7 @@
             "2. high": "105.1200",
             "3. low": "88.3600",
             "4. close": "101.9700",
-            "5. adjusted close": "101.6649",
+            "5. adjusted close": "101.5836",
             "6. volume": "571991600",
             "7. dividend amount": "0.0000"
         },
@@ -1010,7 +1019,7 @@
             "2. high": "96.4900",
             "3. low": "85.7200",
             "4. close": "89.7300",
-            "5. adjusted close": "89.4616",
+            "5. adjusted close": "89.3900",
             "6. volume": "634104916",
             "7. dividend amount": "0.0000"
         },
@@ -1019,7 +1028,7 @@
             "2. high": "98.7400",
             "3. low": "72.0000",
             "4. close": "89.4300",
-            "5. adjusted close": "89.1625",
+            "5. adjusted close": "89.0911",
             "6. volume": "709770559",
             "7. dividend amount": "0.0000"
         },
@@ -1028,7 +1037,7 @@
             "2. high": "99.2400",
             "3. low": "85.2310",
             "4. close": "94.0100",
-            "5. adjusted close": "93.7288",
+            "5. adjusted close": "93.6537",
             "6. volume": "790781334",
             "7. dividend amount": "0.0000"
         },
@@ -1037,7 +1046,7 @@
             "2. high": "89.4000",
             "3. low": "78.6600",
             "4. close": "85.7650",
-            "5. adjusted close": "85.5084",
+            "5. adjusted close": "85.4400",
             "6. volume": "537956820",
             "7. dividend amount": "0.0000"
         },
@@ -1046,7 +1055,7 @@
             "2. high": "81.8450",
             "3. low": "76.7900",
             "4. close": "79.1900",
-            "5. adjusted close": "78.9531",
+            "5. adjusted close": "78.8899",
             "6. volume": "421870709",
             "7. dividend amount": "0.0000"
         },
@@ -1055,7 +1064,7 @@
             "2. high": "85.5900",
             "3. low": "78.3200",
             "4. close": "78.7700",
-            "5. adjusted close": "78.5343",
+            "5. adjusted close": "78.4715",
             "6. volume": "542124478",
             "7. dividend amount": "0.0000"
         },
@@ -1064,7 +1073,7 @@
             "2. high": "86.0699",
             "3. low": "77.2600",
             "4. close": "82.2150",
-            "5. adjusted close": "81.9690",
+            "5. adjusted close": "81.9034",
             "6. volume": "575349997",
             "7. dividend amount": "0.0000"
         },
@@ -1073,7 +1082,7 @@
             "2. high": "81.3700",
             "3. low": "73.4500",
             "4. close": "78.9700",
-            "5. adjusted close": "78.7337",
+            "5. adjusted close": "78.6707",
             "6. volume": "475148609",
             "7. dividend amount": "0.0000"
         },
@@ -1082,7 +1091,7 @@
             "2. high": "79.2455",
             "3. low": "73.5400",
             "4. close": "75.9100",
-            "5. adjusted close": "75.6829",
+            "5. adjusted close": "75.6223",
             "6. volume": "546057661",
             "7. dividend amount": "0.0000"
         },
@@ -1091,7 +1100,7 @@
             "2. high": "82.1700",
             "3. low": "74.4000",
             "4. close": "78.0200",
-            "5. adjusted close": "77.7866",
+            "5. adjusted close": "77.7243",
             "6. volume": "534690249",
             "7. dividend amount": "0.0000"
         },
@@ -1100,7 +1109,7 @@
             "2. high": "78.2700",
             "3. low": "72.5100",
             "4. close": "77.7000",
-            "5. adjusted close": "77.4675",
+            "5. adjusted close": "77.4055",
             "6. volume": "491018048",
             "7. dividend amount": "0.0000"
         },
@@ -1109,7 +1118,7 @@
             "2. high": "81.1600",
             "3. low": "70.3200",
             "4. close": "74.9900",
-            "5. adjusted close": "74.7657",
+            "5. adjusted close": "74.7058",
             "6. volume": "1083643275",
             "7. dividend amount": "0.0000"
         },
@@ -1118,7 +1127,7 @@
             "2. high": "79.7067",
             "3. low": "73.0700",
             "4. close": "79.0400",
-            "5. adjusted close": "78.8035",
+            "5. adjusted close": "78.7405",
             "6. volume": "719738102",
             "7. dividend amount": "0.0000"
         },
@@ -1127,7 +1136,7 @@
             "2. high": "75.9900",
             "3. low": "71.5500",
             "4. close": "74.8200",
-            "5. adjusted close": "74.5962",
+            "5. adjusted close": "74.5365",
             "6. volume": "589592700",
             "7. dividend amount": "0.0000"
         },
@@ -1136,7 +1145,7 @@
             "2. high": "76.7400",
             "3. low": "62.2100",
             "4. close": "72.6500",
-            "5. adjusted close": "72.4327",
+            "5. adjusted close": "72.3747",
             "6. volume": "1025679500",
             "7. dividend amount": "0.0000"
         },
@@ -1145,7 +1154,7 @@
             "2. high": "68.0000",
             "3. low": "61.7900",
             "4. close": "67.2900",
-            "5. adjusted close": "67.0887",
+            "5. adjusted close": "67.0350",
             "6. volume": "862067700",
             "7. dividend amount": "0.0000"
         },
@@ -1154,7 +1163,7 @@
             "2. high": "64.3000",
             "3. low": "56.2600",
             "4. close": "63.3000",
-            "5. adjusted close": "63.1106",
+            "5. adjusted close": "63.0601",
             "6. volume": "1120155500",
             "7. dividend amount": "0.0000"
         },
@@ -1163,7 +1172,7 @@
             "2. high": "63.9100",
             "3. low": "54.6600",
             "4. close": "59.7800",
-            "5. adjusted close": "59.6012",
+            "5. adjusted close": "59.5535",
             "6. volume": "1884621400",
             "7. dividend amount": "0.0000"
         },
@@ -1172,7 +1181,7 @@
             "2. high": "72.5900",
             "3. low": "57.9800",
             "4. close": "60.2400",
-            "5. adjusted close": "60.0598",
+            "5. adjusted close": "60.0117",
             "6. volume": "1255440000",
             "7. dividend amount": "0.0000"
         },
@@ -1181,7 +1190,7 @@
             "2. high": "71.4400",
             "3. low": "60.7000",
             "4. close": "68.4600",
-            "5. adjusted close": "68.2552",
+            "5. adjusted close": "68.2006",
             "6. volume": "1110774100",
             "7. dividend amount": "0.0000"
         },
@@ -1190,7 +1199,7 @@
             "2. high": "63.3700",
             "3. low": "51.8500",
             "4. close": "62.5700",
-            "5. adjusted close": "62.3828",
+            "5. adjusted close": "62.3329",
             "6. volume": "1294714800",
             "7. dividend amount": "0.0000"
         },
@@ -1199,7 +1208,7 @@
             "2. high": "58.5800",
             "3. low": "46.2600",
             "4. close": "54.6490",
-            "5. adjusted close": "54.4855",
+            "5. adjusted close": "54.4419",
             "6. volume": "1517533200",
             "7. dividend amount": "0.0000"
         },
@@ -1208,7 +1217,7 @@
             "2. high": "52.0900",
             "3. low": "43.5500",
             "4. close": "47.0100",
-            "5. adjusted close": "46.8694",
+            "5. adjusted close": "46.8319",
             "6. volume": "1357311900",
             "7. dividend amount": "0.0000"
         },
@@ -1217,7 +1226,7 @@
             "2. high": "54.8250",
             "3. low": "45.2600",
             "4. close": "50.2050",
-            "5. adjusted close": "50.0548",
+            "5. adjusted close": "50.0147",
             "6. volume": "2032635000",
             "7. dividend amount": "0.0000"
         },
@@ -1226,7 +1235,7 @@
             "2. high": "51.6000",
             "3. low": "41.4400",
             "4. close": "50.2300",
-            "5. adjusted close": "50.0797",
+            "5. adjusted close": "50.0396",
             "6. volume": "1583083800",
             "7. dividend amount": "0.0000"
         },
@@ -1235,7 +1244,7 @@
             "2. high": "42.2600",
             "3. low": "36.0201",
             "4. close": "41.2940",
-            "5. adjusted close": "41.1705",
+            "5. adjusted close": "41.1375",
             "6. volume": "1344994100",
             "7. dividend amount": "0.0000"
         },
@@ -1244,7 +1253,7 @@
             "2. high": "38.3100",
             "3. low": "24.1500",
             "4. close": "36.8000",
-            "5. adjusted close": "36.6899",
+            "5. adjusted close": "36.6605",
             "6. volume": "1438017100",
             "7. dividend amount": "0.0000"
         },
@@ -1253,7 +1262,7 @@
             "2. high": "25.1900",
             "3. low": "22.6700",
             "4. close": "24.8800",
-            "5. adjusted close": "24.8056",
+            "5. adjusted close": "24.7857",
             "6. volume": "788331500",
             "7. dividend amount": "0.0000"
         },
@@ -1262,7 +1271,7 @@
             "2. high": "29.0700",
             "3. low": "23.2600",
             "4. close": "24.3480",
-            "5. adjusted close": "24.2752",
+            "5. adjusted close": "24.2557",
             "6. volume": "982094800",
             "7. dividend amount": "0.0000"
         },
@@ -1271,7 +1280,7 @@
             "2. high": "28.1000",
             "3. low": "25.1500",
             "4. close": "27.7690",
-            "5. adjusted close": "27.6859",
+            "5. adjusted close": "27.6638",
             "6. volume": "738509200",
             "7. dividend amount": "0.0000"
         },
@@ -1280,7 +1289,7 @@
             "2. high": "28.6750",
             "3. low": "24.7200",
             "4. close": "25.5800",
-            "5. adjusted close": "25.5035",
+            "5. adjusted close": "25.4831",
             "6. volume": "727180500",
             "7. dividend amount": "0.0000"
         },
@@ -1289,7 +1298,7 @@
             "2. high": "31.0200",
             "3. low": "26.3400",
             "4. close": "27.2500",
-            "5. adjusted close": "27.1685",
+            "5. adjusted close": "27.1467",
             "6. volume": "957639800",
             "7. dividend amount": "0.0000"
         },
@@ -1298,7 +1307,7 @@
             "2. high": "32.5063",
             "3. low": "27.4200",
             "4. close": "30.9810",
-            "5. adjusted close": "30.8883",
+            "5. adjusted close": "30.8636",
             "6. volume": "1675851700",
             "7. dividend amount": "0.0000"
         },
@@ -1307,7 +1316,7 @@
             "2. high": "28.8800",
             "3. low": "25.1500",
             "4. close": "26.6197",
-            "5. adjusted close": "26.5401",
+            "5. adjusted close": "26.5188",
             "6. volume": "1191832200",
             "7. dividend amount": "0.0000"
         },
@@ -1316,7 +1325,7 @@
             "2. high": "28.0000",
             "3. low": "18.8700",
             "4. close": "28.0000",
-            "5. adjusted close": "27.9162",
+            "5. adjusted close": "27.8939",
             "6. volume": "1527490200",
             "7. dividend amount": "0.0000"
         },
@@ -1325,7 +1334,7 @@
             "2. high": "24.2500",
             "3. low": "18.8000",
             "4. close": "21.1100",
-            "5. adjusted close": "21.0468",
+            "5. adjusted close": "21.0300",
             "6. volume": "1100938300",
             "7. dividend amount": "0.0000"
         },
@@ -1334,7 +1343,7 @@
             "2. high": "23.3700",
             "3. low": "17.5500",
             "4. close": "21.6600",
-            "5. adjusted close": "21.5952",
+            "5. adjusted close": "21.5779",
             "6. volume": "1058643700",
             "7. dividend amount": "0.0000"
         },
@@ -1343,7 +1352,7 @@
             "2. high": "22.4500",
             "3. low": "18.0300",
             "4. close": "18.0580",
-            "5. adjusted close": "18.0040",
+            "5. adjusted close": "17.9896",
             "6. volume": "1151944900",
             "7. dividend amount": "0.0000"
         },
@@ -1352,7 +1361,7 @@
             "2. high": "32.8800",
             "3. low": "21.6100",
             "4. close": "21.7100",
-            "5. adjusted close": "21.6451",
+            "5. adjusted close": "21.6277",
             "6. volume": "520189700",
             "7. dividend amount": "0.0000"
         },
@@ -1361,7 +1370,7 @@
             "2. high": "33.4500",
             "3. low": "25.5200",
             "4. close": "31.0950",
-            "5. adjusted close": "31.0020",
+            "5. adjusted close": "30.9772",
             "6. volume": "667910500",
             "7. dividend amount": "0.0000"
         }

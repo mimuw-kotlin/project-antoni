@@ -2,17 +2,26 @@
     "Meta Data": {
         "1. Information": "Monthly Adjusted Prices and Volumes",
         "2. Symbol": "GOOGL",
-        "3. Last Refreshed": "2024-12-09",
+        "3. Last Refreshed": "2025-01-03",
         "4. Time Zone": "US/Eastern"
     },
     "Monthly Adjusted Time Series": {
-        "2024-12-09": {
+        "2025-01-03": {
+            "1. open": "190.6500",
+            "2. high": "193.2100",
+            "3. low": "187.5000",
+            "4. close": "191.7900",
+            "5. adjusted close": "191.7900",
+            "6. volume": "38966987",
+            "7. dividend amount": "0.0000"
+        },
+        "2024-12-31": {
             "1. open": "168.7650",
-            "2. high": "176.2600",
+            "2. high": "201.4200",
             "3. low": "168.5700",
-            "4. close": "175.3700",
-            "5. adjusted close": "175.3700",
-            "6. volume": "145861193",
+            "4. close": "189.3000",
+            "5. adjusted close": "189.3000",
+            "6. volume": "645620865",
             "7. dividend amount": "0.2000"
         },
         "2024-11-29": {

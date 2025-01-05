@@ -2,17 +2,26 @@
     "Meta Data": {
         "1. Information": "Monthly Adjusted Prices and Volumes",
         "2. Symbol": "SNAP",
-        "3. Last Refreshed": "2024-12-09",
+        "3. Last Refreshed": "2025-01-03",
         "4. Time Zone": "US/Eastern"
     },
     "Monthly Adjusted Time Series": {
-        "2024-12-09": {
+        "2025-01-03": {
+            "1. open": "11.0000",
+            "2. high": "12.0800",
+            "3. low": "10.7803",
+            "4. close": "11.9700",
+            "5. adjusted close": "11.9700",
+            "6. volume": "41966088",
+            "7. dividend amount": "0.0000"
+        },
+        "2024-12-31": {
             "1. open": "11.7800",
             "2. high": "13.0500",
-            "3. low": "11.5900",
-            "4. close": "12.5000",
-            "5. adjusted close": "12.5000",
-            "6. volume": "220989270",
+            "3. low": "10.5650",
+            "4. close": "10.7700",
+            "5. adjusted close": "10.7700",
+            "6. volume": "597565464",
             "7. dividend amount": "0.0000"
         },
         "2024-11-29": {

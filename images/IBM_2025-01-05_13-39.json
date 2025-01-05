@@ -2,17 +2,26 @@
     "Meta Data": {
         "1. Information": "Monthly Adjusted Prices and Volumes",
         "2. Symbol": "IBM",
-        "3. Last Refreshed": "2024-12-09",
+        "3. Last Refreshed": "2025-01-03",
         "4. Time Zone": "US/Eastern"
     },
     "Monthly Adjusted Time Series": {
-        "2024-12-09": {
+        "2025-01-03": {
+            "1. open": "221.8200",
+            "2. high": "223.6600",
+            "3. low": "217.6000",
+            "4. close": "222.6500",
+            "5. adjusted close": "222.6500",
+            "6. volume": "6453076",
+            "7. dividend amount": "0.0000"
+        },
+        "2024-12-31": {
             "1. open": "227.5000",
             "2. high": "239.3500",
-            "3. low": "225.5100",
-            "4. close": "230.0000",
-            "5. adjusted close": "230.0000",
-            "6. volume": "23714186",
+            "3. low": "217.6523",
+            "4. close": "219.8300",
+            "5. adjusted close": "219.8300",
+            "6. volume": "81535689",
             "7. dividend amount": "0.0000"
         },
         "2024-11-29": {

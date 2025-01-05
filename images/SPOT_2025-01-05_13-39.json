@@ -2,17 +2,26 @@
     "Meta Data": {
         "1. Information": "Monthly Adjusted Prices and Volumes",
         "2. Symbol": "SPOT",
-        "3. Last Refreshed": "2024-12-09",
+        "3. Last Refreshed": "2025-01-03",
         "4. Time Zone": "US/Eastern"
     },
     "Monthly Adjusted Time Series": {
-        "2024-12-09": {
+        "2025-01-03": {
+            "1. open": "450.5800",
+            "2. high": "472.8000",
+            "3. low": "443.2100",
+            "4. close": "466.6900",
+            "5. adjusted close": "466.6900",
+            "6. volume": "2278619",
+            "7. dividend amount": "0.0000"
+        },
+        "2024-12-31": {
             "1. open": "478.7650",
             "2. high": "506.4729",
-            "3. low": "473.0100",
-            "4. close": "482.5200",
-            "5. adjusted close": "482.5200",
-            "6. volume": "13675098",
+            "3. low": "444.1700",
+            "4. close": "447.3800",
+            "5. adjusted close": "447.3800",
+            "6. volume": "38501999",
             "7. dividend amount": "0.0000"
         },
         "2024-11-29": {

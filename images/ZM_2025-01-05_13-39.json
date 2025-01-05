@@ -2,17 +2,26 @@
     "Meta Data": {
         "1. Information": "Monthly Adjusted Prices and Volumes",
         "2. Symbol": "ZM",
-        "3. Last Refreshed": "2024-12-09",
+        "3. Last Refreshed": "2025-01-03",
         "4. Time Zone": "US/Eastern"
     },
     "Monthly Adjusted Time Series": {
-        "2024-12-09": {
+        "2025-01-03": {
+            "1. open": "82.5100",
+            "2. high": "82.7900",
+            "3. low": "80.8800",
+            "4. close": "82.7000",
+            "5. adjusted close": "82.7000",
+            "6. volume": "3415382",
+            "7. dividend amount": "0.0000"
+        },
+        "2024-12-31": {
             "1. open": "82.5000",
             "2. high": "87.7200",
-            "3. low": "81.7600",
-            "4. close": "85.5800",
-            "5. adjusted close": "85.5800",
-            "6. volume": "17442401",
+            "3. low": "81.2700",
+            "4. close": "81.6100",
+            "5. adjusted close": "81.6100",
+            "6. volume": "56962964",
             "7. dividend amount": "0.0000"
         },
         "2024-11-29": {

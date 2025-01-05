@@ -26,38 +26,38 @@ import androidx.compose.ui.window.WindowState
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 
+val companies = listOf(
+    "APPLE", "GOOGLE", "AMAZON", "MICROSOFT",
+    "TESLA", "META", "NETFLIX", "NVIDIA",
+    "TWITTER", "INTEL", "ADOBE", "SPOTIFY",
+    "ORACLE", "IBM", "AIRBNB",
+    "LYFT", "SNAP", "ZOOM"
+)
+
+val stocks = mapOf(
+    "APPLE" to Stock("AAPL", "APPLE"),
+    "GOOGLE" to Stock("GOOGL", "GOOGLE"),
+    "AMAZON" to Stock("AMZN", "AMAZON"),
+    "MICROSOFT" to Stock("MSFT", "MICROSOFT"),
+    "TESLA" to Stock("TSLA", "TESLA"),
+    "META" to Stock("META", "META"),
+    "NETFLIX" to Stock("NFLX", "NETFLIX"),
+    "NVIDIA" to Stock("NVDA", "NVIDIA"),
+    "TWITTER" to Stock("X", "TWITTER"),
+    "INTEL" to Stock("INTC", "INTEL"),
+    "ADOBE" to Stock("ADBE", "ADOBE"),
+    "SPOTIFY" to Stock("SPOT", "SPOTIFY"),
+    "ORACLE" to Stock("ORCL", "ORACLE"),
+    "IBM" to Stock("IBM", "IBM"),
+    "AIRBNB" to Stock("ABNB", "AIRBNB"),
+    "LYFT" to Stock("LYFT", "LYFT"),
+    "SNAP" to Stock("SNAP", "SNAP"),
+    "ZOOM" to Stock("ZM", "ZOOM")
+)
 
 // Main app function
 @Composable
 fun App() {
-    val companies = listOf(
-        "APPLE", "GOOGLE", "AMAZON", "MICROSOFT",
-        "TESLA", "META", "NETFLIX", "NVIDIA",
-        "TWITTER", "INTEL", "ADOBE", "SPOTIFY",
-        "ORACLE", "IBM", "AIRBNB",
-        "LYFT", "SNAP", "ZOOM"
-    )
-
-    val stocks = mapOf(
-        "APPLE" to Stock("AAPL", "APPLE"),
-        "GOOGLE" to Stock("GOOGL", "GOOGLE"),
-        "AMAZON" to Stock("AMZN", "AMAZON"),
-        "MICROSOFT" to Stock("MSFT", "MICROSOFT"),
-        "TESLA" to Stock("TSLA", "TESLA"),
-        "META" to Stock("META", "META"),
-        "NETFLIX" to Stock("NFLX", "NETFLIX"),
-        "NVIDIA" to Stock("NVDA", "NVIDIA"),
-        "TWITTER" to Stock("X", "TWITTER"),
-        "INTEL" to Stock("INTC", "INTEL"),
-        "ADOBE" to Stock("ADBE", "ADOBE"),
-        "SPOTIFY" to Stock("SPOT", "SPOTIFY"),
-        "ORACLE" to Stock("ORCL", "ORACLE"),
-        "IBM" to Stock("IBM", "IBM"),
-        "AIRBNB" to Stock("ABNB", "AIRBNB"),
-        "LYFT" to Stock("LYFT", "LYFT"),
-        "SNAP" to Stock("SNAP", "SNAP"),
-        "ZOOM" to Stock("ZM", "ZOOM")
-    )
 
     var selectedCompany by remember { mutableStateOf<String?>("APPLE") }
 
@@ -134,7 +134,7 @@ fun DisplayVirtual(stocks: Map<String, Stock>){
     var portfolios = portfoliosList.associateWith { name -> VirtualPortfolio(name) }
     for ((_, portfolio) in portfolios) {
         portfolio.getData()
-        portfolio.calculate(stocks)
+        portfolio.calculatePortfolioValue(stocks)
     }
 
     var showDialog by remember { mutableStateOf(false) }
@@ -167,14 +167,17 @@ fun DisplayVirtual(stocks: Map<String, Stock>){
         }
     }
 
+    val minimum = 1.0
+    val maximum = 1_000_000_000.0
+
     showValue?.let { portfolioName ->
-        var portfolioo = portfolios[portfolioName]!!
-        var portfolio_path = portfolioo.createPieChart()
+        var showPortfolio = portfolios[portfolioName]!!
+        var portfolio_path = showPortfolio.createPieChart()
         Text(
-            text = "Portfolio Value: $${String.format("%.2f", portfolioo.currentValue)}, Money Invested: \$${
+            text = "Portfolio Value: $${String.format("%.2f", showPortfolio.currentValue)}, Money Invested: \$${
                 String.format(
                     "%.2f",
-                    portfolioo.invested
+                    showPortfolio.invested
                 )
             }",
             style = MaterialTheme.typography.body1,
@@ -240,16 +243,17 @@ fun DisplayVirtual(stocks: Map<String, Stock>){
                         }
                     }
                 },
+                
                 confirmButton = {
                     Button(
                         onClick = {
                             val enteredAmount = amount.toDoubleOrNull()
-                            if (stockName.isBlank() || enteredAmount == null || enteredAmount < 1.0 || enteredAmount > 1_000_000_000.0) {
+                            if (stockName.isBlank() || enteredAmount == null || enteredAmount < minimum || enteredAmount > maximum) {
                                 errorMessage = when {
                                     stockName.isBlank() -> "Stock name cannot be empty."
                                     enteredAmount == null -> "Amount must be a valid number."
-                                    enteredAmount < 1.0 || enteredAmount > 1_000_000_000.0 ->
-                                        "Amount must be between 1.0 and 1,000,000,000.0."
+                                    enteredAmount < minimum || enteredAmount > maximum ->
+                                        "Amount must be between ${minimum} and ${maximum}."
                                     else -> ""
                                 }
                             } else if (!stocks.containsKey(stockName)) {
@@ -315,12 +319,13 @@ fun DisplayVirtual(stocks: Map<String, Stock>){
                     Button(
                         onClick = {
                             val enteredAmount = amount1.toDoubleOrNull()
-                            if (stockName.isBlank() || enteredAmount == null || enteredAmount < 1.0 || enteredAmount > portfolios[portfolioName]!!.getStockValue(stockName)) {
+                            var stockAmount = portfolios[portfolioName]!!.getStockValue(stockName)
+                            if (stockName.isBlank() || enteredAmount == null || enteredAmount < minimum || enteredAmount > stockAmount) {
                                 errorMessage2 = when {
                                     stockName.isBlank() -> "Stock name cannot be empty."
                                     enteredAmount == null -> "Amount must be a valid number."
-                                    enteredAmount < 1.0 || enteredAmount > portfolios[portfolioName]!!.getStockValue(stockName) ->
-                                        "Amount must be between 1.0 and ${portfolios[portfolioName]!!.getStockValue(stockName)}"
+                                    enteredAmount < minimum || enteredAmount > stockAmount ->
+                                        "Amount must be between ${minimum} and ${stockAmount}"
                                     else -> ""
                                 }
                             } else if (!stocks.containsKey(stockName)) {
@@ -418,8 +423,8 @@ fun DisplayCompanyDetails(stock: Stock) {
             textAlign = TextAlign.Center 
         )
 
-        val options = listOf("2 years" to 1, "5 years" to 2, "10 years" to 3, "20 years" to 4)
-        var selectedOption by remember { mutableStateOf(4) }
+        val options = listOf("2 years" to TimePeriod.LAST_24_MONTHS, "5 years" to TimePeriod.LAST_60_MONTHS, "10 years" to TimePeriod.LAST_120_MONTHS, "20 years" to TimePeriod.ALL_DATA)
+        var selectedOption by remember { mutableStateOf(TimePeriod.ALL_DATA) }
 
         Row(
             modifier = Modifier

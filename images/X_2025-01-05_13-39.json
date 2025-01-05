@@ -2,17 +2,26 @@
     "Meta Data": {
         "1. Information": "Monthly Adjusted Prices and Volumes",
         "2. Symbol": "X",
-        "3. Last Refreshed": "2024-12-09",
+        "3. Last Refreshed": "2025-01-03",
         "4. Time Zone": "US/Eastern"
     },
     "Monthly Adjusted Time Series": {
-        "2024-12-09": {
+        "2025-01-03": {
+            "1. open": "34.2100",
+            "2. high": "34.3700",
+            "3. low": "29.8700",
+            "4. close": "30.4700",
+            "5. adjusted close": "30.4700",
+            "6. volume": "37470439",
+            "7. dividend amount": "0.0000"
+        },
+        "2024-12-31": {
             "1. open": "41.1800",
             "2. high": "41.7600",
-            "3. low": "36.8501",
-            "4. close": "39.0400",
-            "5. adjusted close": "39.0400",
-            "6. volume": "34755089",
+            "3. low": "29.7100",
+            "4. close": "33.9900",
+            "5. adjusted close": "33.9900",
+            "6. volume": "141808592",
             "7. dividend amount": "0.0000"
         },
         "2024-11-29": {

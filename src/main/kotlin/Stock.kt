@@ -25,6 +25,12 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
 
+import io.github.cdimascio.dotenv.dotenv
+
+val dotenv = dotenv()
+val apiKey = dotenv["API_KEY"] ?: throw IllegalStateException("API_KEY not found in .env file")
+
+
 class Stock(val symbol: String, val name: String) {
     var averages: List<Pair<String, Double>> = emptyList()
     init {
@@ -70,7 +76,7 @@ class Stock(val symbol: String, val name: String) {
                 File(path).readText()
             } ?: run {
                 println("Downloading new data for symbol: $symbol")
-                val response = fetchStockData(symbol, "33ZQ4YW7O1VKD01X")
+                val response = fetchStockData(symbol, apiKey)
                 val newFileName = "$imagesDir/${symbol}_${currentTimestamp}.json"
                 File(newFileName).apply {
                     writeText(response)
@@ -87,21 +93,18 @@ class Stock(val symbol: String, val name: String) {
         }
     }
 
-    // returns current stock value 
-    fun getCurrent(): Double {
-        return averages.lastOrNull()?.second ?: 0.0
-    }
+    val current: Double
+        get() = averages.lastOrNull()?.second ?: 0.0
 
     // return path to plot
-    fun get(option : Int): String {
-        // time period
-        val limit = when (option) {
-            1 -> 24
-            2 -> 60
-            3 -> 120
-            else -> averages.size
+    fun get(option : TimePeriod): String {
+        val timePeriod = when (option) {
+            TimePeriod.LAST_24_MONTHS -> TimePeriod.LAST_24_MONTHS.limit
+            TimePeriod.LAST_60_MONTHS -> TimePeriod.LAST_60_MONTHS.limit
+            TimePeriod.LAST_120_MONTHS -> TimePeriod.LAST_120_MONTHS.limit
+            TimePeriod.ALL_DATA -> averages.size
         }
-        val limitedAverages = averages.takeLast(limit)
+        val limitedAverages = averages.takeLast(timePeriod)
 
         val dates = limitedAverages.map { it.first }
         val prices = limitedAverages.map { it.second }
@@ -128,7 +131,7 @@ class Stock(val symbol: String, val name: String) {
         val currentDir = System.getProperty("user.dir")
         val folderPath = "$currentDir/images"
 
-        val filename = "${limit}_${symbol}.png"
+        val filename = "${timePeriod}_${symbol}.png"
 
         val file = File(folderPath, filename)
         ImageIO.write(chart.createBufferedImage(800, 600), "PNG", file)

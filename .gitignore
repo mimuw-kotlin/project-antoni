@@ -1,0 +1,19 @@
+# Ignore IntelliJ IDEA files
+.idea/
+
+# Ignore Gradle cache files
+.gradle/
+
+# Ignore build output
+build/
+
+# Ignore temporary or system files
+*.log
+*.tmp
+*.swp
+.DS_Store
+Thumbs.db
+
+# Ignore generated scripts
+gradlew
+gradlew.bat

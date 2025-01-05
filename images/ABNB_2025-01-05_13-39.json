@@ -2,17 +2,26 @@
     "Meta Data": {
         "1. Information": "Monthly Adjusted Prices and Volumes",
         "2. Symbol": "ABNB",
-        "3. Last Refreshed": "2024-12-09",
+        "3. Last Refreshed": "2025-01-03",
         "4. Time Zone": "US/Eastern"
     },
     "Monthly Adjusted Time Series": {
-        "2024-12-09": {
+        "2025-01-03": {
+            "1. open": "131.8700",
+            "2. high": "136.3600",
+            "3. low": "130.4100",
+            "4. close": "135.7100",
+            "5. adjusted close": "135.7100",
+            "6. volume": "6213624",
+            "7. dividend amount": "0.0000"
+        },
+        "2024-12-31": {
             "1. open": "136.0100",
             "2. high": "140.3800",
-            "3. low": "134.8500",
-            "4. close": "137.2700",
-            "5. adjusted close": "137.2700",
-            "6. volume": "26302893",
+            "3. low": "127.2300",
+            "4. close": "131.4100",
+            "5. adjusted close": "131.4100",
+            "6. volume": "92330450",
             "7. dividend amount": "0.0000"
         },
         "2024-11-29": {

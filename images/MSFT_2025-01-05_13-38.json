@@ -2,17 +2,26 @@
     "Meta Data": {
         "1. Information": "Monthly Adjusted Prices and Volumes",
         "2. Symbol": "MSFT",
-        "3. Last Refreshed": "2024-12-09",
+        "3. Last Refreshed": "2025-01-03",
         "4. Time Zone": "US/Eastern"
     },
     "Monthly Adjusted Time Series": {
-        "2024-12-09": {
+        "2025-01-03": {
+            "1. open": "425.5300",
+            "2. high": "426.0700",
+            "3. low": "414.8500",
+            "4. close": "423.3500",
+            "5. adjusted close": "423.3500",
+            "6. volume": "33559412",
+            "7. dividend amount": "0.0000"
+        },
+        "2024-12-31": {
             "1. open": "421.5700",
-            "2. high": "448.3300",
-            "3. low": "421.3100",
-            "4. close": "446.0200",
-            "5. adjusted close": "446.0200",
-            "6. volume": "124181804",
+            "2. high": "456.1648",
+            "3. low": "420.6600",
+            "4. close": "421.5000",
+            "5. adjusted close": "421.5000",
+            "6. volume": "439908245",
             "7. dividend amount": "0.0000"
         },
         "2024-11-29": {
