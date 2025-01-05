@@ -1,3 +1,4 @@
+import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -57,12 +58,87 @@ val stocks = mapOf(
 
 // Main app function
 @Composable
+@Preview
 fun App() {
 
     var selectedCompany by remember { mutableStateOf<String?>("APPLE") }
 
     MaterialTheme {
-        Column(modifier = Modifier.padding(16.dp)) {
+        LazyColumn(modifier = Modifier.padding(16.dp)) {
+            item {
+                Text(
+                    "Choose company to analyse:",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .padding(16.dp),
+                    style = MaterialTheme.typography.h6.copy(
+                        textAlign = TextAlign.Center
+                    )
+                )
+            }
+        
+    
+
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
+            item {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(6),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(150.dp),
+                    contentPadding = PaddingValues(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(companies.size) { index ->
+                        val company = companies[index]
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { selectedCompany = company }
+                                .padding(8.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(company, style = MaterialTheme.typography.body1)
+                        }
+                    }
+                }
+            }
+        
+        
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
+            item {
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                    ) {
+                        DisplayVirtual(stocks)
+                    }
+
+                    selectedCompany?.let { company ->
+                        Column(
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxHeight()
+                        ) {
+                            DisplayCompanyDetails(stocks[company]!!)
+                        }
+                    }
+                }
+            }
+        }
+        
+        /*
+        LazyColumn(modifier = Modifier.padding(16.dp)) {
             Text(
                 "Choose company to analyse:",
                 modifier = Modifier
@@ -123,6 +199,7 @@ fun App() {
             }
 
         }
+        */
     }
 }
 
@@ -147,7 +224,7 @@ fun DisplayVirtual(stocks: Map<String, Stock>){
     var amount1 by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
     var errorMessage2 by remember { mutableStateOf("") }
-
+    /*
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 100.dp),
         modifier = Modifier.fillMaxWidth(),
@@ -155,36 +232,40 @@ fun DisplayVirtual(stocks: Map<String, Stock>){
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(portfolios.size) { index ->
-            Button(onClick = { showValue = portfolios.keys.toList()[index] }) {
-                Text(text = portfolios.keys.toList()[index])
+        */
+
+    Spacer(modifier = Modifier.height(16.dp))
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(24.dp)
+    ) {
+        portfolios.keys.forEach { portfolioName ->
+            Button(onClick = { showValue = portfolioName }) {
+                Text(text = portfolioName)
             }
         }
-        item {
-            Button(onClick = { showDialog = true }) {
-                Text("Add new portfolio")
-            }
+        Button(onClick = { showDialog = true }) {
+            Text("Add new portfolio")
         }
     }
-
+    
     val minimum = 1.0
     val maximum = 1_000_000_000.0
-
     showValue?.let { portfolioName ->
-        var showPortfolio = portfolios[portfolioName]!!
-        var portfolio_path = showPortfolio.createPieChart()
+        val showPortfolio = portfolios[portfolioName]!!
+        val portfolioPath = remember(portfolioName) { showPortfolio.createPieChart() }
+
         Text(
             text = "Portfolio Value: $${String.format("%.2f", showPortfolio.currentValue)}, Money Invested: \$${
-                String.format(
-                    "%.2f",
-                    showPortfolio.invested
-                )
+                String.format("%.2f", showPortfolio.invested)
             }",
             style = MaterialTheme.typography.body1,
             modifier = Modifier.padding(8.dp)
         )
 
-        val imageBitmap = loadImageFromFile(portfolio_path)
+        val imageBitmap = remember(portfolioPath) { loadImageFromFile(portfolioPath) }
         imageBitmap?.let { bitmap ->
             Image(
                 bitmap = bitmap,
@@ -198,18 +279,17 @@ fun DisplayVirtual(stocks: Map<String, Stock>){
         } ?: Text(
             "Error loading image",
             color = MaterialTheme.colors.error,
-            modifier = Modifier
-                .padding(start = 16.dp)
+            modifier = Modifier.padding(start = 16.dp)
         )
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start 
+            horizontalArrangement = Arrangement.Start
         ) {
             Button(onClick = { showBuyDialog = true }) {
                 Text("Buy")
             }
-            Spacer(modifier = Modifier.width(8.dp)) 
+            Spacer(modifier = Modifier.width(8.dp))
             Button(onClick = { showSellDialog = true }) {
                 Text("Sell")
             }
@@ -348,6 +428,7 @@ fun DisplayVirtual(stocks: Map<String, Stock>){
                 }
             )
         }
+
     }
 
     var errorMessage1 by remember { mutableStateOf("") }
