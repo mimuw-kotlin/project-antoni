@@ -5,12 +5,10 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.Duration
-
 import javax.imageio.ImageIO
 import javax.swing.ImageIcon
 import javax.swing.JEditorPane
 import javax.swing.JLabel
-
 import org.jfree.chart.ChartFactory
 import org.jfree.chart.ChartPanel
 import org.jfree.chart.JFreeChart
@@ -18,21 +16,25 @@ import org.jfree.chart.plot.PlotOrientation
 import org.jfree.data.category.DefaultCategoryDataset
 import org.jfree.data.general.DefaultPieDataset
 import org.jfree.chart.ChartUtils
-
 import java.awt.Color
-
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
+import kotlin.math.pow
+import org.json.JSONObject
+//import kotlinx.serialization.json.*
 
-import io.github.cdimascio.dotenv.dotenv
-
-val dotenv = dotenv()
-val apiKey = dotenv["API_KEY"] ?: throw IllegalStateException("API_KEY not found in .env file")
-
-
-class Stock(val symbol: String, val name: String) {
+class Stock(val symbol: String, val name: String, val industry: String) {
     var averages: List<Pair<String, Double>> = emptyList()
+    var dividend: Double = 0.0
+    var fetched: Boolean = false
+    private val incomeStatementPath = "./income_statement"
+    private val balanceSheetPath = "./balance_sheet"
+    private var incomeStatementData: JSONObject? = null
+    private var balanceSheetData: JSONObject? = null
+    private var incomeStatements: List<AnnualReport> = emptyList()
+    val financial: FinancialCalculator
+
     init {
         runBlocking {
             // I fetch data from the API at most once every 24 hours.
@@ -87,14 +89,113 @@ class Stock(val symbol: String, val name: String) {
             val json = Json { ignoreUnknownKeys = true }
             val parsedResponse = json.decodeFromString<MonthlyAdjustedTimeSeriesResponse>(jsonResponse)
 
+            dividend = parsedResponse.monthlyAdjustedData.entries
+                .maxByOrNull { it.key }
+                ?.value?.dividendAmount ?: 0.0
+
             averages = parsedResponse.monthlyAdjustedData.entries
                 .sortedBy { it.key } 
                 .map { it.key to it.value.adjustedClose.toDouble() }
         }
+        setIncomeStatement()
+        val currentReport = incomeStatements[0]
+        val previousReport = incomeStatements[1]
+        financial = FinancialCalculator(currentReport, previousReport)
+    }
+
+    fun getBalanceAndIncome(): Pair<JSONObject?, JSONObject?> {
+        if (!fetched) {
+            incomeStatementData = loadJsonFromFile("$incomeStatementPath/${symbol}_income_statement.json")
+            balanceSheetData = loadJsonFromFile("$balanceSheetPath/${symbol}_balance_sheet.json")
+            fetched = true
+        }
+        return Pair(balanceSheetData, incomeStatementData)
+    }
+
+    private fun loadJsonFromFile(filePath: String): JSONObject? {
+        val file = File(filePath)
+        return if (file.exists()) {
+            val jsonData = file.readText()
+            JSONObject(jsonData)
+        } else {
+            println("File not found: $filePath")
+            null
+        }
+    }
+
+    fun getBalanceSheetData(): JSONObject? {
+        if (!fetched) getBalanceAndIncome()
+        return balanceSheetData
+    }
+
+    fun getIncomeStatementData(): JSONObject? {
+        if (!fetched) getBalanceAndIncome()
+        return incomeStatementData
+    }
+
+    fun setIncomeStatement() {
+        if (!fetched) getBalanceAndIncome()
+        incomeStatements = parseIncomeStatement(incomeStatementData!!)
+    }
+
+    private fun parseIncomeStatement(json: JSONObject): List<AnnualReport> {
+        val reports = mutableListOf<AnnualReport>()
+
+        val annualReportsArray = json.optJSONArray("annualReports")
+        if (annualReportsArray != null) {
+            for (i in 0 until annualReportsArray.length()) {
+                val reportJson = annualReportsArray.getJSONObject(i)
+                val report = AnnualReport(
+                    fiscalDateEnding = reportJson.optString("fiscalDateEnding"),
+                    grossProfit = reportJson.optDouble("grossProfit"),
+                    totalRevenue = reportJson.optDouble("totalRevenue"),
+                    costOfRevenue = reportJson.optDouble("costOfRevenue"),
+                    operatingIncome = reportJson.optDouble("operatingIncome"),
+                    netIncome = reportJson.optDouble("netIncome"),
+                    operatingExpenses = reportJson.optDouble("operatingExpenses"),
+                    researchAndDevelopment = reportJson.optDouble("researchAndDevelopment"),
+                    incomeBeforeTax = reportJson.optDouble("incomeBeforeTax"),
+                    incomeTaxExpense = reportJson.optDouble("incomeTaxExpense"),
+                    interestExpense = reportJson.optDouble("interestExpense").takeIf { !it.isNaN() },
+                    ebit = reportJson.optDouble("ebit"),
+                    ebitda = reportJson.optDouble("ebitda")
+                )
+                reports.add(report)
+            }
+        }
+
+        return reports
+    }
+
+    fun getIncomeStatements(): List<AnnualReport> {
+        return incomeStatements
     }
 
     val current: Double
         get() = averages.lastOrNull()?.second ?: 0.0
+    
+    val weightedMovingAverage: Double
+    get() = averages.takeLast(12)
+        .mapIndexed { index, (_, adjustedClose) -> 
+            adjustedClose * (index + 1) 
+        }
+        .sum() / averages.takeLast(12).indices.sumOf { it + 1 }
+    
+    fun annual(years: Int): Double {
+        val availableMonths = this.averages.size
+        val maxYears = availableMonths / 12
+
+        val effectiveYears = minOf(years, maxYears)
+
+        if (effectiveYears == 0) {
+            throw IllegalArgumentException("Not enough data to calculate annual growth.")
+        }
+
+        val startingPrice = this.averages[this.averages.size - effectiveYears * 12].second
+        val endingPrice = this.averages.last().second
+        return (endingPrice / startingPrice).pow(1.0 / effectiveYears) - 1
+    }
+
 
     // return path to plot
     fun get(option : TimePeriod): String {
@@ -127,10 +228,8 @@ class Stock(val symbol: String, val name: String) {
         )
 
         chart.plot.backgroundPaint = Color.WHITE
-
         val currentDir = System.getProperty("user.dir")
         val folderPath = "$currentDir/images"
-
         val filename = "${timePeriod}_${symbol}.png"
 
         val file = File(folderPath, filename)

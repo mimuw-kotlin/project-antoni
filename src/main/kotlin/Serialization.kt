@@ -18,5 +18,5 @@ data class StockData(
     @SerialName("4. close") val close: String,
     @SerialName("5. adjusted close") val adjustedClose: String,
     @SerialName("6. volume") val volume: String,
-    @SerialName("7. dividend amount") val dividendAmount: String
+    @SerialName("7. dividend amount") val dividendAmount: Double
 )
