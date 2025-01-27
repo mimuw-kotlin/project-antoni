@@ -3,23 +3,31 @@ fun evaluateStockDecisionHybrid(
     currentPrice: Double,
     weightedMovingAverage: Double
 ): String {
-    // Evaluate fundamental indicators
+    // Extract financial ratios with default values
     val revenueGrowth = (financialRatios["Revenue Growth Rate (%)"] as? Double) ?: 0.0
     val grossMargin = (financialRatios["Gross Margin (%)"] as? Double) ?: 0.0
-    val netIncomeGrowth = (financialRatios["Net Income Growth Rate (%)"] as? Double) ?: 0.0
-    //println("Revenue Growth: $revenueGrowth, Gross Margin: $grossMargin, Net Income Growth: $netIncomeGrowth")
-    val isFundamentallyStrong = revenueGrowth > 5 && grossMargin > 40
-    val isNotFundamentallyStrong = revenueGrowth < -1 && grossMargin < 8
-    // Evaluate growth in net income
-    val isHighNetIncomeGrowth = netIncomeGrowth > 12.5 // Arbitrary threshold for "high growth"
-    val isSuperHighNetIncomeGrowth = netIncomeGrowth > 23
-    // Perform technical analysis
-    val isUndervalued = currentPrice < weightedMovingAverage
+    val netProfitMargin = (financialRatios["Net Profit Margin (%)"] as? Double) ?: 0.0
+    val operatingMargin = (financialRatios["Operating Margin (%)"] as? Double) ?: 0.0
+    val ebitdaMargin = (financialRatios["EBITDA Margin (%)"] as? Double) ?: 0.0
+    val interestCoverageRatio = (financialRatios["Interest Coverage Ratio"] as? Double) ?: 0.0
+    val effectiveTaxRate = (financialRatios["Effective Tax Rate (%)"] as? Double) ?: 0.0
 
-    // Combine results
+    // Fundamental analysis
+    val conditionsMet = listOf(
+        revenueGrowth > 5,
+        grossMargin > 40,
+        netProfitMargin > 10,
+        operatingMargin > 15,
+        ebitdaMargin > 20,
+        interestCoverageRatio > 3,
+        effectiveTaxRate in 10.0..30.0,
+        currentPrice < weightedMovingAverage
+    ).count { it }
+
+    // Decision thresholds
     return when {
-        isFundamentallyStrong && ((isUndervalued && isHighNetIncomeGrowth) || (isSuperHighNetIncomeGrowth)) -> "BUY"
-        isNotFundamentallyStrong || netIncomeGrowth < -4 -> "SELL" // Adjusted to consider low growth
+        conditionsMet >= 7 -> "BUY" // Buy signal if most conditions are met
+        conditionsMet <= 2 -> "SELL" // Sell signal if few conditions are met
         else -> "STAY"
     }
 }

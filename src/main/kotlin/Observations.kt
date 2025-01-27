@@ -31,7 +31,6 @@ fun newObservation(stock: Stock, observation: String) {
     try {
         FileWriter(observationFile, true).use { writer ->
             writer.write("$observation\n")
-            println("Observation added successfully.")
         }
     } catch (e: IOException) {
         println("An error occurred while writing the observation: ${e.message}")

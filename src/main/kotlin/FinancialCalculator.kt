@@ -1,3 +1,5 @@
+import kotlin.math.abs
+
 data class AnnualReport(
     val fiscalDateEnding: String,
     val grossProfit: Double,
@@ -16,7 +18,7 @@ data class AnnualReport(
 
 
 class FinancialCalculator(
-    private var incomeStatements: List<AnnualReport>
+    private val incomeStatements: List<AnnualReport>
 ) {
     private val currentReport: AnnualReport
     private var previousReport: AnnualReport? = null
@@ -85,10 +87,7 @@ class FinancialCalculator(
         currentReport: AnnualReport,
         previousReport: AnnualReport
     ): Double {
-        var denuminator = previousReport.netIncome
-        if (previousReport.netIncome < 0.0){
-            denuminator = 1.0
-        }
-        return ((currentReport.netIncome - previousReport.netIncome) / denuminator) * 100
+        val denominator = previousReport.netIncome
+        return ((currentReport.netIncome - denominator) / abs(denominator)) * 100
     }
 }

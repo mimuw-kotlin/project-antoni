@@ -1,11 +1,12 @@
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.toComposeImageBitmap
 import java.io.File
+import java.nio.file.Path
 import javax.imageio.ImageIO
 
-fun loadImageFromFile(path: String): ImageBitmap? {
+fun loadImageFromFile(path: Path): ImageBitmap? {
     return try {
-        val file = File(path)
+        val file = path.toFile()
         val bufferedImage = ImageIO.read(file)
         bufferedImage?.let { it.toComposeImageBitmap() }
     } catch (e: Exception) {
@@ -22,11 +23,15 @@ fun deletePngFilesInImagesFolder() {
 }
 
 // return list of all virtual portfolios 
-fun listOfPortfolios(): List<String> {
+fun listOfPortfolios(): MutableList<String> {
     val currentDir = System.getProperty("user.dir")
     val virtualFolder = File("$currentDir/virtual")
     if (virtualFolder.exists() && virtualFolder.isDirectory) {
-        return virtualFolder.listFiles()?.filter { it.isDirectory }?.map { it.name } ?: emptyList()
+        return virtualFolder.listFiles()
+            ?.filter { it.isDirectory }
+            ?.map { it.name }
+            ?.toMutableList()
+            ?: mutableListOf()
     }
-    return emptyList()
+    return mutableListOf()
 }

@@ -10,3 +10,17 @@ class Screener(private val stocks: Map<String, Stock>){
         return matchingStocks
     }
 }
+
+val industries = listOf(
+    "Technology", "E-commerce", "Automotive", "Entertainment", "Semiconductors",
+    "Social Media", "Software", "Travel", "Communication"
+)
+
+val criteria = listOf(
+    "Current Value", "Dividend Amount", "Weighted Moving Average <= Current Price",
+    "One Year Annual Growth", "Two Years Annual Growth", "Five Years Annual Growth"
+)
+
+val myScreener = Screener(stocks)
+var requirements: MutableList<Requirement> = mutableListOf()
+var companyScreener: MutableList<String> = mutableListOf()

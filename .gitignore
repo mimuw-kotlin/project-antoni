@@ -15,5 +15,4 @@ build/
 Thumbs.db
 
 # Ignore generated scripts
-gradlew
 gradlew.bat

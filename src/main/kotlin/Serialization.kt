@@ -1,6 +1,4 @@
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.*
-import kotlinx.serialization.json.*
 
 @Serializable
 data class MonthlyAdjustedTimeSeriesResponse(

@@ -1,37 +1,26 @@
 import java.io.File
-import java.io.FileInputStream
-import java.nio.file.Paths
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.Duration
 import javax.imageio.ImageIO
-import javax.swing.ImageIcon
-import javax.swing.JEditorPane
-import javax.swing.JLabel
 import org.jfree.chart.ChartFactory
-import org.jfree.chart.ChartPanel
 import org.jfree.chart.JFreeChart
 import org.jfree.chart.plot.PlotOrientation
 import org.jfree.data.category.DefaultCategoryDataset
-import org.jfree.data.general.DefaultPieDataset
-import org.jfree.chart.ChartUtils
 import java.awt.Color
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
 import kotlin.math.pow
 import org.json.JSONObject
-//import kotlinx.serialization.json.*
+import java.nio.file.Path
 
 class Stock(val symbol: String, val name: String, val industry: String) {
     var averages: List<Pair<String, Double>> = emptyList()
     var dividend: Double = 0.0
-    var fetched: Boolean = false
+    private var fetched: Boolean = false
     private val incomeStatementPath = "./income_statement"
-    private val balanceSheetPath = "./balance_sheet"
     private var incomeStatementData: JSONObject? = null
-    private var balanceSheetData: JSONObject? = null
     private var incomeStatements: List<AnnualReport> = emptyList()
     val financial: FinancialCalculator
     val stockDecision: String 
@@ -100,21 +89,19 @@ class Stock(val symbol: String, val name: String, val industry: String) {
         setIncomeStatement()
         financial = FinancialCalculator(incomeStatements)
         stockDecision = evaluateStockDecision()
-        //println("${name} ${stockDecision}")
     }
 
-    fun evaluateStockDecision(): String {
+    private fun evaluateStockDecision(): String {
         val financialRatios = financial.calculateAllRatios()
-        return evaluateStockDecisionHybrid(financialRatios, current, weightedMovingAverage, )
+        return evaluateStockDecisionHybrid(financialRatios, current, weightedMovingAverage)
     }
 
-    fun getBalanceAndIncome(): Pair<JSONObject?, JSONObject?> {
+    private fun getIncome(): JSONObject? {
         if (!fetched) {
             incomeStatementData = loadJsonFromFile("$incomeStatementPath/${symbol}_income_statement.json")
-            balanceSheetData = loadJsonFromFile("$balanceSheetPath/${symbol}_balance_sheet.json")
             fetched = true
         }
-        return Pair(balanceSheetData, incomeStatementData)
+        return incomeStatementData
     }
 
     private fun loadJsonFromFile(filePath: String): JSONObject? {
@@ -128,6 +115,7 @@ class Stock(val symbol: String, val name: String, val industry: String) {
         }
     }
 
+    /*
     fun getBalanceSheetData(): JSONObject? {
         if (!fetched) getBalanceAndIncome()
         return balanceSheetData
@@ -137,9 +125,10 @@ class Stock(val symbol: String, val name: String, val industry: String) {
         if (!fetched) getBalanceAndIncome()
         return incomeStatementData
     }
+    */
 
-    fun setIncomeStatement() {
-        if (!fetched) getBalanceAndIncome()
+    private fun setIncomeStatement() {
+        if (!fetched) getIncome()
         incomeStatements = parseIncomeStatement(incomeStatementData!!)
     }
 
@@ -172,9 +161,11 @@ class Stock(val symbol: String, val name: String, val industry: String) {
         return reports
     }
 
+    /*
     fun getIncomeStatements(): List<AnnualReport> {
         return incomeStatements
     }
+    */
 
     val current: Double
         get() = averages.lastOrNull()?.second ?: 0.0
@@ -198,12 +189,12 @@ class Stock(val symbol: String, val name: String, val industry: String) {
 
         val startingPrice = this.averages[this.averages.size - effectiveYears * 12].second
         val endingPrice = this.averages.last().second
-        return (endingPrice / startingPrice).pow(1.0 / effectiveYears) - 1
+        return ((endingPrice / startingPrice).pow(1.0 / effectiveYears) - 1) * 100
     }
 
 
     // return path to plot
-    fun get(option : TimePeriod): String {
+    fun getPlot(option : TimePeriod): Path {
         val timePeriod = when (option) {
             TimePeriod.LAST_24_MONTHS -> TimePeriod.LAST_24_MONTHS.limit
             TimePeriod.LAST_60_MONTHS -> TimePeriod.LAST_60_MONTHS.limit
@@ -222,7 +213,7 @@ class Stock(val symbol: String, val name: String, val industry: String) {
         }
 
         val chart: JFreeChart = ChartFactory.createLineChart(
-            "${name} Stock Price Over Time",
+            "$name Stock Price Over Time",
             "Date",
             "Price",
             dataset,
@@ -240,7 +231,6 @@ class Stock(val symbol: String, val name: String, val industry: String) {
         val file = File(folderPath, filename)
         ImageIO.write(chart.createBufferedImage(800, 600), "PNG", file)
 
-        return file.absolutePath
+        return file.toPath()
     }
-
 }
