@@ -24,71 +24,80 @@ class Stock(val symbol: String, val name: String, val industry: String) {
     private var incomeStatements: List<AnnualReport> = emptyList()
     val financial: FinancialCalculator
     val stockDecision: String 
+    
     init {
-        runBlocking {
-            // I fetch data from the API at most once every 24 hours.
-            // Then, the program saves the response to the appropriate file.
-            // If the last API fetch occurred less than 24 hours ago,
-            // the program loads the data from the file instead.
-
-            val currentDir = System.getProperty("user.dir")
-            val imagesDir = "$currentDir/images"
-            val now = LocalDateTime.now()
-            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm")
-            val currentTimestamp = now.format(formatter)
-            
-            val regex = Regex("${symbol}_(\\d{4}-\\d{2}-\\d{2})_(\\d{2}-\\d{2})\\.json")
-            
-            var latestFilePath: String? = null
-            File(imagesDir).walkTopDown().forEach { file ->
-                if (file.isFile && file.name.matches(regex)) {
-                    val matchResult = regex.find(file.name)
-                    if (matchResult != null) {
-                        val (datePart, timePart) = matchResult.destructured
-                        val fileDateTime = LocalDateTime.parse("$datePart $timePart", DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm"))
-                        
-                        // Checking whether file is older than 24 hours
-                        val duration = Duration.between(fileDateTime, now)
-                        if (duration.toHours() > 24) {
-                            println("Removing file : ${file.name} (older than 24 hours)")
-                            file.delete()
-                        } else {
-                            // Choosing latest file
-                            if (latestFilePath == null || fileDateTime.isAfter(LocalDateTime.parse(latestFilePath!!.substringAfter("${symbol}_").substringBefore(".json"), DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm")))) {
-                                latestFilePath = file.path
-                            }
-                        }
-                    }
-                }
-            }
-            
-            val jsonResponse = latestFilePath?.let { path ->
-                println("Downloading data from file: ${File(path).name}")
-                File(path).readText()
-            } ?: run {
-                println("Downloading new data for symbol: $symbol")
-                val response = fetchStockData(symbol, apiKey)
-                val newFileName = "$imagesDir/${symbol}_${currentTimestamp}.json"
-                File(newFileName).apply {
-                    writeText(response)
-                }
-                response
-            }
-
-            val json = Json { ignoreUnknownKeys = true }
-            val parsedResponse = json.decodeFromString<MonthlyAdjustedTimeSeriesResponse>(jsonResponse)
-
-            dividend = parsedResponse.monthlyAdjustedData.entries
-                .maxByOrNull { it.key }
-                ?.value?.dividendAmount ?: 0.0
-
-            averages = parsedResponse.monthlyAdjustedData.entries
-                .sortedBy { it.key } 
-                .map { it.key to it.value.adjustedClose.toDouble() }
-        }
         setIncomeStatement()
         financial = FinancialCalculator(incomeStatements)
         stockDecision = evaluateStockDecision()
+    }
+
+    suspend fun initializeData() {
+        val currentDir = System.getProperty("user.dir")
+        val imagesDir = "$currentDir/images"
+        val now = LocalDateTime.now()
+    
+        //mRemove old files and fetch the latest file path
+        val latestFilePath = cleanUpOldFiles(imagesDir, now)
+    
+        // Fetch or load data
+        val jsonResponse = latestFilePath?.let { path ->
+            println("Loading data from file: ${File(path).name}")
+            File(path).readText()
+        } ?: fetchAndSaveData(imagesDir, now)
+    
+        // Process the JSON response and assign to fields
+        processStockData(jsonResponse)
+    }
+    
+    private fun cleanUpOldFiles(imagesDir: String, now: LocalDateTime): String? {
+        val regex = Regex("${symbol}_(\\d{4}-\\d{2}-\\d{2})_(\\d{2}-\\d{2})\\.json")
+        var latestFilePath: String? = null
+    
+        File(imagesDir).walkTopDown().forEach { file ->
+            if (file.isFile && file.name.matches(regex)) {
+                val matchResult = regex.find(file.name)
+                if (matchResult != null) {
+                    val (datePart, timePart) = matchResult.destructured
+                    val fileDateTime = LocalDateTime.parse("$datePart $timePart", DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm"))
+    
+                    // Check if file is older than 24 hours
+                    val duration = Duration.between(fileDateTime, now)
+                    if (duration.toHours() > 24) {
+                        println("Removing file: ${file.name} (older than 24 hours)")
+                        file.delete()
+                    } else if (latestFilePath == null || fileDateTime.isAfter(LocalDateTime.parse(latestFilePath!!.substringAfter("${symbol}_").substringBefore(".json"), DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm")))) {
+                        latestFilePath = file.path
+                    }
+                }
+            }
+        }
+        return latestFilePath
+    }
+    
+    private suspend fun fetchAndSaveData(imagesDir: String, now: LocalDateTime): String {
+        println("Downloading new data for symbol: $symbol")
+        val response = fetchStockData(symbol, apiKey)
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm")
+        val currentTimestamp = now.format(formatter)
+        val newFileName = "$imagesDir/${symbol}_${currentTimestamp}.json"
+    
+        File(newFileName).apply {
+            writeText(response)
+        }
+        return response
+    }
+    
+    private fun processStockData(jsonResponse: String) {
+        val json = Json { ignoreUnknownKeys = true }
+        val parsedResponse = json.decodeFromString<MonthlyAdjustedTimeSeriesResponse>(jsonResponse)
+    
+        dividend = parsedResponse.monthlyAdjustedData.entries
+            .maxByOrNull { it.key }
+            ?.value?.dividendAmount ?: 0.0
+    
+        averages = parsedResponse.monthlyAdjustedData.entries
+            .sortedBy { it.key }
+            .map { it.key to it.value.adjustedClose.toDouble() }
     }
 
     private fun evaluateStockDecision(): String {

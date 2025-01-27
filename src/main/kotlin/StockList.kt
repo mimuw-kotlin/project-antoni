@@ -26,3 +26,10 @@ val stocks = mapOf(
     "SNAP" to Stock("SNAP", "SNAP", "Social Media"),
     "ZOOM" to Stock("ZM", "ZOOM", "Communication")
 )
+
+// Initialize data for all stocks
+suspend fun initializeAllStocks() {
+    stocks.values.forEach { stock ->
+        stock.initializeData()
+    }
+}

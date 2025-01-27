@@ -1,3 +1,7 @@
+// This program is designed to analyze whether a stock is worth buying, selling, or holding
+// Initially, the project was intended to focus on AI-powered stock price prediction
+// but the scope was shifted to provide actionable investment recommendations
+
 fun evaluateStockDecisionHybrid(
     financialRatios: Map<String, Any?>,
     currentPrice: Double,
