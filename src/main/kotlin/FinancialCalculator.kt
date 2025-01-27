@@ -16,9 +16,16 @@ data class AnnualReport(
 
 
 class FinancialCalculator(
-    private val currentReport: AnnualReport,
-    private val previousReport: AnnualReport? = null
+    private var incomeStatements: List<AnnualReport>
 ) {
+    private val currentReport: AnnualReport
+    private var previousReport: AnnualReport? = null
+    init {
+        currentReport = incomeStatements[0]
+        if(incomeStatements.size > 1){
+            previousReport = incomeStatements[1]
+        }
+    }
     fun calculateAllRatios(): Map<String, Any?> {
         return mapOf(
             "Gross Margin (%)" to calculateGrossMargin(currentReport),
@@ -78,6 +85,10 @@ class FinancialCalculator(
         currentReport: AnnualReport,
         previousReport: AnnualReport
     ): Double {
-        return ((currentReport.netIncome - previousReport.netIncome) / previousReport.netIncome) * 100
+        var denuminator = previousReport.netIncome
+        if (previousReport.netIncome < 0.0){
+            denuminator = 1.0
+        }
+        return ((currentReport.netIncome - previousReport.netIncome) / denuminator) * 100
     }
 }

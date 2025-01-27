@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.foundation.background
 
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.WindowState
@@ -70,6 +71,31 @@ fun App() {
                 ) {
                     items(companies.size) { index ->
                         val company = companies[index]
+                        val stockDecision = stocks[company]?.stockDecision ?: "NONE"
+                        val backgroundColor = when (stockDecision) {
+                            "BUY" -> Color.Green
+                            "SELL" -> Color.Red
+                            else -> Color.Gray
+                        }
+                    
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { selectedCompany = company }
+                                .padding(8.dp)
+                                .background(backgroundColor),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = company,
+                                style = MaterialTheme.typography.body1,
+                                color = Color.White
+                            )
+                        }
+                    }
+                    /*
+                    items(companies.size) { index ->
+                        val company = companies[index]
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -79,7 +105,8 @@ fun App() {
                         ) {
                             Text(company, style = MaterialTheme.typography.body1)
                         }
-                    }
+                    } 
+                    */
                 }
             }
         

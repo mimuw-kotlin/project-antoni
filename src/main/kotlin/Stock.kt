@@ -34,7 +34,7 @@ class Stock(val symbol: String, val name: String, val industry: String) {
     private var balanceSheetData: JSONObject? = null
     private var incomeStatements: List<AnnualReport> = emptyList()
     val financial: FinancialCalculator
-
+    val stockDecision: String 
     init {
         runBlocking {
             // I fetch data from the API at most once every 24 hours.
@@ -98,9 +98,14 @@ class Stock(val symbol: String, val name: String, val industry: String) {
                 .map { it.key to it.value.adjustedClose.toDouble() }
         }
         setIncomeStatement()
-        val currentReport = incomeStatements[0]
-        val previousReport = incomeStatements[1]
-        financial = FinancialCalculator(currentReport, previousReport)
+        financial = FinancialCalculator(incomeStatements)
+        stockDecision = evaluateStockDecision()
+        //println("${name} ${stockDecision}")
+    }
+
+    fun evaluateStockDecision(): String {
+        val financialRatios = financial.calculateAllRatios()
+        return evaluateStockDecisionHybrid(financialRatios, current, weightedMovingAverage, )
     }
 
     fun getBalanceAndIncome(): Pair<JSONObject?, JSONObject?> {

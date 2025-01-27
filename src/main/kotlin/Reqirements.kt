@@ -1,4 +1,3 @@
-
 sealed interface Requirement {
   fun execute(stock : Stock): Boolean
 }
@@ -23,7 +22,7 @@ class Dividend(private val minimum: Double) : Requirement {
  
 class WeightedMovingAverage() : Requirement {
     override fun execute(stock: Stock): Boolean {
-        return stock.weightedMovingAverage >= stock.current
+        return stock.weightedMovingAverage <= stock.current
     }
 }
 
