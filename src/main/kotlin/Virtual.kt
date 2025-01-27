@@ -1,31 +1,25 @@
 import org.jfree.chart.ChartFactory
-import org.jfree.chart.ChartPanel
-import org.jfree.chart.JFreeChart
-import org.jfree.chart.plot.PlotOrientation
-import org.jfree.data.category.DefaultCategoryDataset
 import org.jfree.data.general.DefaultPieDataset
 import org.jfree.chart.ChartUtils
-
-import java.awt.Color
-
 import java.io.FileWriter
 import java.io.FileReader
 import java.io.IOException
 import java.io.BufferedWriter
 import java.io.BufferedReader
 import java.io.File
+import java.nio.file.Path
 
+data class StockInformation(
+    val symbol: String, 
+    val price: Double,  
+    val volume: Double  
+)
 
-class VirtualPortfolio(val name: String){
-    val stockDataList = mutableListOf<Triple<String, Double, Double>>()
-    val myStocks = mutableMapOf<String, Double>()
-    var invested : Double
-    var currentValue : Double
-
-    init {
-        invested = 0.0
-        currentValue = 0.0
-    }
+class VirtualPortfolio(private val name: String){
+    private val stockDataList = mutableListOf<StockInformation>()
+    private val myStocks = mutableMapOf<String, Double>()
+    var invested : Double = 0.0
+    var currentValue : Double = 0.0
 
     // Creating new folder to represent portfolio
     fun create(){
@@ -45,7 +39,7 @@ class VirtualPortfolio(val name: String){
         }
     }
 
-    // loading information about all the previos sells and buys
+    // loading information about all the previous sells and buys
     fun getData() {
         val currentDir = System.getProperty("user.dir")
         val folderPath = "$currentDir/virtual/$name"
@@ -61,7 +55,7 @@ class VirtualPortfolio(val name: String){
                     val stock = parts[0]
                     val priceStart = parts[1].toDouble()
                     val owned = parts[2].toDouble()
-                    stockDataList.add(Triple(stock, priceStart, owned))
+                    stockDataList.add(StockInformation(symbol = stock, price = priceStart, volume = owned))
                 }
             }
             reader.close()
@@ -69,53 +63,22 @@ class VirtualPortfolio(val name: String){
             println("An error occurred while reading the file: ${e.message}")
         }
     }
-    /*
-    // old functions that I might need in the future
-    fun getData() {
-        val currentDir = System.getProperty("user.dir")
-        val folderPath = "$currentDir/virtual/$name"
-        val dataFile = File(folderPath, "data.csv")
-        try {
-            val reader = BufferedReader(FileReader(dataFile))
-            @Suppress("UNUSED_VARIABLE")
-            val header = reader.readLine()
-            var line: String?
-            while (reader.readLine().also { line = it } != null) {
-                val parts = line!!.split(",")
-                if (parts.size == 3) {
-                    val stock = parts[0]
-                    val priceStart = parts[1].toDouble()
-                    val owned = parts[2].toDouble()
-                    stockDataList.add(Triple(stock, priceStart, owned))
-                }
-            }
-            reader.close()
-        } catch (e: IOException) {
-            println("An error occurred while reading the file: ${e.message}")
-        }
-    }
-    */
 
-    // calculating value of portfolio
-    fun calculate(stocks: Map<String, Stock>) {
-        invested = 0.0
-        currentValue = 0.0
-
-        stockDataList.asReversed().forEach { (symbol, priceStart, owned) ->
-            val cur = stocks[symbol]?.getCurrent() ?: 0.0
-            val value = owned * cur / priceStart
+    fun calculatePortfolioValue(stocks: Map<String, Stock>) {
+        stockDataList.asReversed().forEach { (symbol, price, volume) ->
+            val cur = stocks[symbol]?.current ?: 0.0
+            val value = volume * cur / price
             if (symbol !in myStocks) {
-                invested += owned
+                invested += volume
                 currentValue += value
                 myStocks[symbol] = value
             }
-            //myStocks[symbol] = myStocks[symbol]?.plus(value) ?: value
         }
     }
 
     // new Buy/Sell operation
     fun newPos(stocks: Map<String, Stock>, stockName: String, value: Double) {
-        val priceStart = stocks[stockName]?.getCurrent() ?: throw IllegalArgumentException("Stock not found")
+        val priceStart = stocks[stockName]?.current ?: throw IllegalArgumentException("Stock not found")
         val currentDir = System.getProperty("user.dir")
         val folderPath = "$currentDir/virtual/$name"
         val dataFile = File(folderPath, "stocks.csv")
@@ -143,8 +106,8 @@ class VirtualPortfolio(val name: String){
         return myStocks[stockName]!!
     }
 
-    // piechart of all stocks in the portfolio
-    fun createPieChart(): String {
+    // Chart of all stocks in the portfolio
+    fun createPieChart(): Path {
         val currentDir = System.getProperty("user.dir")
         val directoryPath = "$currentDir/virtual/$name"
         val directory = File(directoryPath)
@@ -172,10 +135,8 @@ class VirtualPortfolio(val name: String){
             false                     // Do not generate URLs
         )
 
-        val chartPath = "$directoryPath/chart.png"
-        ChartUtils.saveChartAsPNG(File(chartPath), pieChart, 800, 600)
-
-        return chartPath
+        val chartFile = File("$directoryPath/chart.png")
+        ChartUtils.saveChartAsPNG(chartFile, pieChart, 800, 600)
+        return chartFile.toPath()
     }
-
 }

@@ -1,17 +1,4 @@
-import io.ktor.client.*
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
-
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.*
-import kotlinx.serialization.json.*
-
-val client = HttpClient()
-
-suspend fun fetchStockData(symbol: String, apiKey: String): String {
-    val url = "https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY_ADJUSTED&symbol=$symbol&apikey=$apiKey"
-    return client.get(url).bodyAsText()
-}
 
 @Serializable
 data class MonthlyAdjustedTimeSeriesResponse(
@@ -29,5 +16,5 @@ data class StockData(
     @SerialName("4. close") val close: String,
     @SerialName("5. adjusted close") val adjustedClose: String,
     @SerialName("6. volume") val volume: String,
-    @SerialName("7. dividend amount") val dividendAmount: String
+    @SerialName("7. dividend amount") val dividendAmount: Double
 )
